@@ -3,7 +3,7 @@
 
 #include <STC12C5A60S2.H>
 
-#define SYS_CLK 11059200L
+#define SYS_CLK 11059200L	//绯荤粺棰戠巼璁剧疆
 
 #if !defined(SYS_CLK)
 #define SYS_CLK 24000000L
@@ -14,9 +14,9 @@
 #define UART1	1
 #define UART2	2
 
-#define	PRINTF_SELECT 		 UART1		//选择 printf 函数所使用的串口，参数 UART1~UART2
+#define	PRINTF_SELECT 		 UART1		//閫夋嫨 printf 鍑芥暟鎵�浣跨敤鐨勪覆鍙ｏ紝鍙傛暟 UART1~UART2
 
-#define	UART_ROUTINE_SELECT  UART1		//选择 串口中断 函数所使用的串口，参数 UART1~UART2
+#define	UART_ROUTINE_SELECT  UART1		//閫夋嫨 涓插彛涓柇 鍑芥暟鎵�浣跨敤鐨勪覆鍙ｏ紝鍙傛暟 UART1~UART2
 
 #define	UART1_CLEAR_RX_FLAG (SCON  &= ~0x01)
 #define	UART2_CLEAR_RX_FLAG (S2CON &= ~0x01)
