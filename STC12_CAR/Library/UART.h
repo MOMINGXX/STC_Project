@@ -3,11 +3,13 @@
 
 #include <STC12C5A60S2.H>
 
-#if !defined(SYS_CLK)
 #define SYS_CLK 11059200L
+
+#if !defined(SYS_CLK)
+#define SYS_CLK 24000000L
 #endif
 
-#define SMOD 0
+#define SMOD 0		
 
 #define UART1	1
 #define UART2	2

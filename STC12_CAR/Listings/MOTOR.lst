@@ -1,0 +1,202 @@
+C51 COMPILER V9.60.7.0   MOTOR                                                             01/09/2023 21:25:33 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MOTOR
+OBJECT MODULE PLACED IN .\Objects\MOTOR.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE HardWare\MOTOR.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\HardWare;.\User;.
+                    -\Library) DEBUG OBJECTEXTEND PRINT(.\Listings\MOTOR.lst) OBJECT(.\Objects\MOTOR.obj)
+
+line level    source
+
+   1          #include "MOTOR.h"
+   2          
+   3          uint8_t compare=80;
+   4          
+   5          /****
+   6                  @brief      定时器初始化                500微秒@11.0592MHz
+   7                  @param          无
+   8                  @return     无          
+   9                  Sample usage:   Time0_Init();
+  10          ****/
+  11          void Time0_Init()
+  12          {
+  13   1              AUXR &= 0x7F;           //定时器时钟12T模式
+  14   1              TMOD &= 0xF0;           //设置定时器模式
+  15   1              TMOD |= 0x01;           //设置定时器模式
+  16   1              TL0 = 0x33;             //设置定时初始值
+  17   1              TH0 = 0xFE;             //设置定时初始值
+  18   1              TF0 = 0;                //清除TF0标志
+  19   1              TR0 = 1;                //定时器0开始计时
+  20   1              ET0 = 1;                //开启定时器中断
+  21   1              EA = 1;                 //开启总中断 
+  22   1      }
+  23          
+  24          /****
+  25              *@brief             加速
+  26              *@param             无
+  27              *@retval    无
+  28          *****/
+  29          void Motor_AddSpeed()
+  30          {
+  31   1              compare+=10;
+  32   1      }
+  33          
+  34          /****
+  35              *@brief             减速
+  36              *@param             无
+  37              *@retval    无
+  38          *****/
+  39          void Motor_ReduceSpeed()
+  40          {
+  41   1              compare-=10;
+  42   1      }
+  43          
+  44          /****
+  45                  @brief      前进
+  46                  @param          无
+  47                  @return     无          
+  48                  Sample usage:    Motor_Init(); 
+  49          ****/
+  50          void Motor_Init()
+  51          {
+  52   1              Time0_Init();
+  53   1              LEFT_IN1=0;
+  54   1              LEFT_IN2=0;
+C51 COMPILER V9.60.7.0   MOTOR                                                             01/09/2023 21:25:33 PAGE 2   
+
+  55   1              
+  56   1              RIGHT_IN3=0;
+  57   1              RIGHT_IN4=0;
+  58   1      }
+  59          
+  60          /****
+  61                  @brief      前进
+  62                  @param          无
+  63                  @return     无          
+  64                  Sample usage:    Motor_Ford(); 
+  65          ****/
+  66          void Motor_ForWard()
+  67          {
+  68   1              LEFT_IN1=1;
+  69   1              LEFT_IN2=0;
+  70   1              
+  71   1              RIGHT_IN3=1;
+  72   1              RIGHT_IN4=0;
+  73   1      }
+  74          
+  75          /****
+  76                  @brief      后退
+  77                  @param          无
+  78                  @return     无          
+  79                  Sample usage:    Motor_Back();        
+  80          ****/
+  81          void Motor_Back()
+  82          {
+  83   1              LEFT_IN1=0;
+  84   1              LEFT_IN2=1;
+  85   1              
+  86   1              RIGHT_IN3=0;
+  87   1              RIGHT_IN4=1;
+  88   1      }
+  89          
+  90          /****
+  91              *@brief             左转
+  92              *@param             无
+  93              *@retval    无
+  94                  Sample usage:    Motor_Turnleft();  
+  95          *****/
+  96          void Motor_TurnLeft()
+  97          {
+  98   1              LEFT_IN1=0;
+  99   1              LEFT_IN2=1;
+ 100   1              
+ 101   1              RIGHT_IN3=1;
+ 102   1              RIGHT_IN4=0;
+ 103   1      }
+ 104          
+ 105          /****
+ 106              *@brief             右转
+ 107              *@param             无
+ 108              *@retval    无
+ 109                  Sample usage:    Motor_Turnright();  
+ 110          *****/
+ 111          void Motor_Turnright()
+ 112          {
+ 113   1              LEFT_IN1=1;
+ 114   1              LEFT_IN2=0;
+ 115   1              
+ 116   1              RIGHT_IN3=0;
+C51 COMPILER V9.60.7.0   MOTOR                                                             01/09/2023 21:25:33 PAGE 3   
+
+ 117   1              RIGHT_IN4=1;
+ 118   1      }
+ 119          
+ 120          /****
+ 121              *@brief             停止
+ 122              *@param             无
+ 123              *@retval    无
+ 124                  Sample usage:    Motor_Stop();  
+ 125          *****/
+ 126          void Motor_Stop()
+ 127          {
+ 128   1              LEFT_IN1=0;
+ 129   1              LEFT_IN2=0;
+ 130   1              
+ 131   1              RIGHT_IN3=0;
+ 132   1              RIGHT_IN4=0;
+ 133   1      }
+ 134          
+ 135          void Motor_Speed_ADD()
+ 136          {
+ 137   1              compare +=10;
+ 138   1      }
+ 139          
+ 140          void Time0_Routine() interrupt 1
+ 141          {
+ 142   1              static uint8_t count1=0; //电机计数标志
+ 143   1              static uint8_t count2=0; //舵机计数标志
+ 144   1              TL0 = 0x33;             //设置定时初始值
+ 145   1              TH0 = 0xFE;             //设置定时初始值
+ 146   1              //电机
+ 147   1              count1++;
+ 148   1              count1 %= 200;
+ 149   1              if(compare > count1)
+ 150   1              {
+ 151   2                      EN1=EN2=1;
+ 152   2              }
+ 153   1              else 
+ 154   1              {
+ 155   2                      EN1=EN2=0;
+ 156   2              }
+ 157   1                      
+ 158   1              //舵机
+ 159   1              count2++;                       //500us 记一次
+ 160   1              count2 %= 40;           //20ms 周期
+ 161   1              if(Servo_PWM > count2)
+ 162   1              {
+ 163   2                      Servo=1;
+ 164   2              }
+ 165   1              else 
+ 166   1              {
+ 167   2                      Servo=0;
+ 168   2              }
+ 169   1      }
+ 170          
+ 171                  
+ 172          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    201    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      3    ----
+C51 COMPILER V9.60.7.0   MOTOR                                                             01/09/2023 21:25:33 PAGE 4   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

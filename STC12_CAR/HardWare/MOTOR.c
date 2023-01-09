@@ -1,6 +1,6 @@
 #include "MOTOR.h"
 
-uint8_t compare=50;
+uint8_t compare=80;
 
 /****
 	@brief      定时器初始化		500微秒@11.0592MHz
@@ -28,7 +28,7 @@ void Time0_Init()
 *****/
 void Motor_AddSpeed()
 {
-	compare-=10;
+	compare+=10;
 }
 
 /****
@@ -38,7 +38,7 @@ void Motor_AddSpeed()
 *****/
 void Motor_ReduceSpeed()
 {
-	compare+=10;
+	compare-=10;
 }
 
 /****
@@ -150,8 +150,11 @@ void Time0_Routine() interrupt 1
 	{
 		EN1=EN2=1;
 	}
-	else EN1=EN2=0;
-	
+	else 
+	{
+		EN1=EN2=0;
+	}
+		
 	//舵机
 	count2++;			//500us 记一次
 	count2 %= 40;		//20ms 周期
@@ -159,7 +162,10 @@ void Time0_Routine() interrupt 1
 	{
 		Servo=1;
 	}
-	else Servo=0;
+	else 
+	{
+		Servo=0;
+	}
 }
 
 	

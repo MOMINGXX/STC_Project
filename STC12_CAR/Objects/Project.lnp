@@ -1,0 +1,7 @@
+".\Objects\main.obj",
+".\Objects\MOTOR.obj",
+".\Objects\SERVO.obj",
+".\Objects\UART.obj" 
+TO ".\Objects\Project" 
+PRINT(".\Listings\Project.m51") RAMSIZE(256) 
+DISABLEWARNING (16) 

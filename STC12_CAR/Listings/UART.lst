@@ -1,0 +1,304 @@
+C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Objects\UART.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE Library\UART.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\HardWare;.\User;.\L
+                    -ibrary) DEBUG OBJECTEXTEND PRINT(.\Listings\UART.lst) OBJECT(.\Objects\UART.obj)
+
+line level    source
+
+   1          #include "UART.h"
+   2          
+   3          uint8_t DAT1;                           //存放接收的字符
+   4          uint8_t RX1_BUFF[10];           //接收的数据    缓冲区
+   5          uint8_t RX1_DAT[10];                    //存放接收的数据
+   6          uint8_t RX1_COUNT=0;                    //接收计数
+   7          bit Flag1 = 0;                          //标志位
+   8          
+   9          uint8_t DAT2;                           //存放接收的字符
+  10          uint8_t RX2_BUFF[10];           //接收的数据    缓冲区
+  11          uint8_t RX2_DAT[10];                    //存放接收的数据
+  12          uint8_t RX2_COUNT=0;                    //接收计数
+  13          bit Flag2 = 0;                          //标志位
+  14          
+  15          
+  16          /****
+  17                  @brief      串口初始化
+  18                  @param          Uart_n                  串口号  USART_1,USART_2
+  19                  @param          GPIORX_Pin              接收I/O口       P30 P12 P42
+  20                  @param          GPIOTX_Pin              发送I/O口       P31 P13 P43
+  21                  @param          baud                    波特率  115200 57600 9600 4800 2400
+  22                  @param          Tim_n                   波特率发生器
+  23                  @return     无          
+  24                  Sample usage:  Uart_Init(UART_1,GPIORX_P30,GPIOTX_P31,9600,Tim_1);             
+  25                  @note    若需波特率加倍 则将    #define SMOD 0  -->  #define SMOD 1
+  26          ****/
+  27          void Uart_Init(UART_NAME Uart_n,GPIO_PIN GPIORX_Pin,GPIO_PIN GPIOTX_Pin,uint16_t baud,UART_TIM Tim_n)   
+  28          {
+  29   1              switch(Uart_n)
+  30   1              {               
+  31   2                      case UART_1:
+  32   2                      {
+  33   3                              SCON = 0x50;            //8位数据,可变波特率
+  34   3                              #if SMOD == 0
+  35   3                              PCON &= 0x7F;           //波特率不倍速
+  36   3                              #elif SMOD == 1
+                                      PCON |= 0x80;           //使能波特率倍速位SMOD
+                                      #endif
+  39   3                              if(TIM_1 == Tim_n)
+  40   3                              {
+  41   4                                      AUXR |= 0x40;           //定时器时钟1T模式
+  42   4                                      AUXR &= 0xFE;           //串口1选择定时器1为波特率发生器
+  43   4                                      TMOD &= 0x0F;           //设置定时器模式
+  44   4                                      TMOD |= 0x20;           //设置定时器模式
+  45   4                                      #if SMOD == 1
+                                              TL1 = TH1 = -(2*SYS_CLK/32/baud);               //设置定时器初始值与重载值
+                                              #elif SMOD == 0
+  48   4                                      TL1 = TH1 = -(SYS_CLK/32/baud);         //设置定时器初始值与重载值
+  49   4                                      #endif
+  50   4                                      
+  51   4                                      #ifndef OPEN_EA
+  52   4                                      ET1 = 0;                        //禁止定时器中断
+  53   4                                      TR1 = 1;                        //定时器1开始计时
+  54   4                                      #endif
+C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 2   
+
+  55   4                              }
+  56   3                              else if(TIM_BRT == Tim_n)
+  57   3                              {
+  58   4                                      #if SMOD == 1
+                                              BRT = -(2*SYS_CLK/32/baud);                     //设置定时重载值
+                                              #elif SMOD == 0
+  61   4                                      BRT = -(SYS_CLK/32/baud);                       //设置定时重载值
+  62   4                                      #endif
+  63   4                                      AUXR |= 0x04;           //定时器时钟1T模式
+  64   4                                      AUXR |= 0x01;           //串口1使用独立波特率发射器为波特率发生器
+  65   4                                      AUXR |= 0x10;           //启动独立波特率发射器
+  66   4                              }
+  67   3                              if(GPIORX_P30 == GPIORX_Pin && GPIOTX_P31 == GPIOTX_Pin)
+  68   3                              {
+  69   4                                      //P30双向IO口
+  70   4                                      P3M1 &= ~0x01;  
+  71   4                                      P3M0 &= ~0x01;
+  72   4                                      //P31双向IO口
+  73   4                                      P3M1 &= ~0x02;
+  74   4                                      P3M0 &= ~0x02;
+  75   4                              }
+  76   3                              break;
+  77   3                      }
+  78   2                      case UART_2:
+  79   2                      {
+  80   3                              #if SMOD == 1
+                                      AUXR |= 0x08;           //使能波特率倍速位S2SMOD
+                                      BRT = -(2*SYS_CLK/32/baud);                     //设置定时重载值
+                                      #elif SMOD == 0
+  84   3                              AUXR &= 0xF7;           //波特率不倍速
+  85   3                              BRT = -(SYS_CLK/32/baud);                       //设置定时重载值
+  86   3                              #endif
+  87   3                              S2CON = 0x50;           //8位数据,可变波特率
+  88   3                              AUXR |= 0x04;           //定时器时钟1T模式
+  89   3                              AUXR |= 0x10;           //启动独立波特率发射器
+  90   3                              if(GPIORX_P12 == GPIORX_Pin && GPIOTX_P13 == GPIOTX_Pin)
+  91   3                              {
+  92   4                                      //P12双向IO口
+  93   4                                      P1M1 &= ~0x40;
+  94   4                                      P1M0 &= ~0x40;
+  95   4                                      
+  96   4                                      //P13双向IO口
+  97   4                                      P1M1 &= ~0x80;
+  98   4                                      P1M0 &= ~0x80;
+  99   4                                      AUXR1 &= ~0x10;
+ 100   4                              }
+ 101   3                              else if(GPIORX_P42 == GPIORX_Pin && GPIOTX_P43 == GPIOTX_Pin)
+ 102   3                              {
+ 103   4                                      //P42双向IO口
+ 104   4                                      P4M1 &= ~0x40;
+ 105   4                                      P4M0 &= ~0x40;
+ 106   4                                      
+ 107   4                                      //P43双向IO口
+ 108   4                                      P4M1 &= ~0x80;
+ 109   4                                      P4M0 &= ~0x80;
+ 110   4                                      AUXR1 |= 0x10;
+ 111   4                              }
+ 112   3                              break;
+ 113   3                      }
+ 114   2              }
+ 115   1      }
+ 116          
+C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 3   
+
+ 117          /****
+ 118                  @brief      串口发送一个字节
+ 119                  @param          uart_n          串口号  USART_1,USART_2
+ 120                  @param     Byte                         要发送的字节    
+ 121                  @return     无
+ 122                  Sample usage:    Uart_SendByte(UART_1,'p');  
+ 123          ****/
+ 124          void Uart_SendByte(UART_NAME Uart_n,uint8_t Byte)
+ 125          {
+ 126   1              switch(Uart_n)
+ 127   1              {
+ 128   2                      case UART_1:
+ 129   2                      {
+ 130   3                              SBUF=Byte;
+ 131   3                              while (UART1_GET_TX_FLAG == 0);
+ 132   3                              UART1_CLEAR_TX_FLAG;
+ 133   3                      }
+ 134   2                              break;
+ 135   2                      case UART_2:
+ 136   2                      {
+ 137   3                              S2BUF=Byte;
+ 138   3                              while(UART2_GET_TX_FLAG==0);
+ 139   3                              UART2_CLEAR_TX_FLAG;
+ 140   3                      }
+ 141   2                              break;
+ 142   2              }
+ 143   1      }
+ 144          
+ 145          /****
+ 146                  @brief      串口发送一个字符串 
+ 147                  @param          uart_n          串口号  USART_1,USART_2
+ 148                  @param          String                  要发送的字符串 
+ 149                  @return     无          
+ 150                  Sample usage:     Uart_SendString(UART_1,"ABCD");    
+ 151          ****/
+ 152          void Uart_SendString(UART_NAME Uart_n,uint8_t *String)
+ 153          {
+ 154   1              while(*String != '\0')
+ 155   1              {
+ 156   2                      Uart_SendByte(Uart_n,*String++);
+ 157   2              }
+ 158   1      }
+ 159          
+ 160          /****
+ 161                  @brief      串口发送数组
+ 162                  @param          uart_n          串口号  USART_1,USART_2
+ 163                  @param          Buff                    要发送的数组 
+ 164                  @param          Len                             数组长度
+ 165                  @return     无          
+ 166                  Sample usage:     Uart_SendString(UART_1,arr,sizeof(arr)/sizeof(arr[0]));    
+ 167          ****/
+ 168          void Uart_SendBuff(UART_NAME Uart_n,uint8_t *Buff,uint16_t Len)
+ 169          {
+ 170   1              while(Len--)
+ 171   1              {
+ 172   2                      Uart_SendByte(Uart_n,*Buff++);
+ 173   2              }
+ 174   1      }
+ 175          
+ 176          /****
+ 177                  @brief      printf打印
+ 178                  @param          c
+C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 4   
+
+ 179                  @return     c           
+ 180                  Sample usage:  printf("Hello\n"); 
+ 181          ****/
+ 182          #if (PRINTF_SELECT == 1)
+ 183          uint8_t putchar(uint8_t c)
+ 184          {
+ 185   1              if(c == '\n')
+ 186   1              {
+ 187   2                      Uart_SendByte(UART_1,0x0D);
+ 188   2              }
+ 189   1              Uart_SendByte(UART_1,c);
+ 190   1              return c;
+ 191   1      }
+ 192          
+ 193          #elif (PRINTF_SELECT == 2)
+              uint8_t putchar(uint8_t c)
+              {
+                      if(c == '\n')
+                      {
+                              Uart_SendByte(UART_1,0x0D);
+                      }
+                      Uart_SendByte(UART_1,c);
+                      return c;
+              }
+              #endif
+ 204          
+ 205          /*
+ 206          //不换行
+ 207          #if (PRINTF_SELECT == 1)
+ 208          char putchar(char c)
+ 209          {
+ 210                  Uart_SendByte(UART_1,c);
+ 211                  return c;
+ 212          }
+ 213          
+ 214          #elif (PRINTF_SELECT == 2)
+ 215          char putchar(char c)
+ 216          {
+ 217                  Uart_SendByte(UART_1,c);
+ 218                  return c;
+ 219          }
+ 220          #endif
+ 221          */
+ 222          
+ 223          //串口1中断接收数据
+ 224          #if (UART_ROUTINE_SELECT == 1)
+ 225          void Uart1_Routine() interrupt 4
+ 226          {
+ 227   1              static uint8_t i=0;
+ 228   1              if(UART1_GET_RX_FLAG)
+ 229   1              {
+ 230   2                      UART1_CLEAR_RX_FLAG;
+ 231   2                      DAT1 = SBUF;
+ 232   2                      if(DAT1 != '#')                         //'#'结束标志
+ 233   2                      {
+ 234   3                              RX1_BUFF[RX1_COUNT++] = DAT1++;
+ 235   3                      }
+ 236   2                      else
+ 237   2                      {
+ 238   3                              for(i=0;i<RX1_COUNT;i++)
+ 239   3                              {
+ 240   4                                      RX1_DAT[i] = RX1_BUFF[i];
+C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 5   
+
+ 241   4                              }
+ 242   3                              RX1_COUNT=0;
+ 243   3                              Flag1=1;
+ 244   3                      }
+ 245   2              }
+ 246   1      }
+ 247          
+ 248          //串口2中断接收数据
+ 249          #elif (UART_ROUTINE_SELECT == 2)
+              void Uart1_Routine() interrupt 8
+              {
+                      static uint8_t i=0;
+                      if(UART2_GET_RX_FLAG)
+                      {
+                              UART2_CLEAR_RX_FLAG;
+                              DAT2 = S2BUF;
+                              if(DAT2 != '#')                         //'#'结束标志
+                              {
+                                      RX2_BUFF[RX2_COUNT++] = DAT2++;
+                              }
+                              else
+                              {
+                                      for(i=0;i<RX2_COUNT;i++)
+                                      {
+                                              RX2_DAT[i] = RX2_BUFF[i];
+                                      }
+                                      RX2_COUNT=0;
+                                      Flag2=1;
+                              }
+                      }
+              }
+              #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    524    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     45      15
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

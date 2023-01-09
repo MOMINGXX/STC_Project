@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    01/05/2023  22:28:25  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    01/09/2023  21:25:34  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
@@ -59,7 +59,7 @@ LINK MAP OF MODULE:  .\Objects\Project (MAIN)
             CODE    03F7H     008CH     UNIT         ?C_C51STARTUP
             CODE    0483H     0082H     UNIT         ?PR?UART1_ROUTINE?UART
             CODE    0505H     0060H     UNIT         ?PR?TIME0_ROUTINE?MOTOR
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 2
 
 
             CODE    0565H     0044H     UNIT         ?C?LDIV
@@ -68,15 +68,15 @@ LINK MAP OF MODULE:  .\Objects\Project (MAIN)
             CODE    05FFH     0028H     UNIT         ?PR?_UART_SENDSTRING?UART
             CODE    0627H     0028H     UNIT         ?PR?_UART_SENDBUFF?UART
             CODE    064FH     0021H     UNIT         ?C_INITSEG
-            CODE    0670H     001EH     UNIT         ?PR?MAIN?MAIN
-            CODE    068EH     0018H     UNIT         ?PR?TIME0_INIT?MOTOR
-            CODE    06A6H     0017H     UNIT         ?PR?_PUTCHAR?UART
-            CODE    06BDH     0009H     UNIT         ?PR?MOTOR_BACK?MOTOR
-            CODE    06C6H     0009H     UNIT         ?PR?MOTOR_TURNLEFT?MOTOR
-            CODE    06CFH     0009H     UNIT         ?PR?MOTOR_TURNRIGHT?MOTOR
-            CODE    06D8H     0009H     UNIT         ?PR?MOTOR_STOP?MOTOR
-            CODE    06E1H     0008H     UNIT         ?PR?MOTOR_REDUCESPEED?MOTOR
-            CODE    06E9H     0008H     UNIT         ?PR?MOTOR_SPEED_ADD?MOTOR
+            CODE    0670H     001FH     UNIT         ?PR?MAIN?MAIN
+            CODE    068FH     0018H     UNIT         ?PR?TIME0_INIT?MOTOR
+            CODE    06A7H     0017H     UNIT         ?PR?_PUTCHAR?UART
+            CODE    06BEH     0009H     UNIT         ?PR?MOTOR_BACK?MOTOR
+            CODE    06C7H     0009H     UNIT         ?PR?MOTOR_TURNLEFT?MOTOR
+            CODE    06D0H     0009H     UNIT         ?PR?MOTOR_TURNRIGHT?MOTOR
+            CODE    06D9H     0009H     UNIT         ?PR?MOTOR_STOP?MOTOR
+            CODE    06E2H     0008H     UNIT         ?PR?MOTOR_REDUCESPEED?MOTOR
+            CODE    06EAH     0008H     UNIT         ?PR?MOTOR_SPEED_ADD?MOTOR
 
 
 
@@ -91,8 +91,12 @@ SEGMENT                               XDATA_GROUP
   +--> ?C_INITSEG
 
 ?PR?MAIN?MAIN                       -----    -----
+  +--> ?PR?MOTOR_INIT?MOTOR
   +--> ?PR?_UART_INIT?UART
   +--> ?PR?VOICE_MODE?MAIN
+
+?PR?MOTOR_INIT?MOTOR                -----    -----
+  +--> ?PR?TIME0_INIT?MOTOR
 
 ?PR?_UART_INIT?UART                 002DH    0006H
 
@@ -115,13 +119,13 @@ SEGMENT                               XDATA_GROUP
 
 
 
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 3
+
+
 SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
 
   VALUE           TYPE          NAME
   ----------------------------------
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 3
-
-
 
   -------         MODULE        MAIN
   C:0000H         SYMBOL        _ICE_DUMMY_
@@ -131,7 +135,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   D:00B0H         PUBLIC        P3
   D:00C0H         PUBLIC        P4
   D:00C8H         PUBLIC        P5
-  B:00A8H.7       PUBLIC        EA
   D:00A8H         PUBLIC        IE
   B:00A8H.4       PUBLIC        ES
   D:00B8H         PUBLIC        IP
@@ -145,59 +148,53 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:0670H         LINE#         10
   C:0670H         LINE#         11
   C:0670H         LINE#         12
-  C:0685H         LINE#         13
-  C:0687H         LINE#         15
-  C:0689H         LINE#         16
-  C:0689H         LINE#         17
-  C:0689H         LINE#         19
-  C:068CH         LINE#         28
+  C:0673H         LINE#         13
+  C:0688H         LINE#         14
+  C:068AH         LINE#         17
+  C:068AH         LINE#         18
+  C:068AH         LINE#         20
+  C:068DH         LINE#         29
   -------         ENDPROC       MAIN
   -------         PROC          VOICE_MODE
-  C:0147H         LINE#         31
   C:0147H         LINE#         32
   C:0147H         LINE#         33
-  C:014DH         LINE#         34
+  C:0147H         LINE#         34
   C:014DH         LINE#         35
-  C:0169H         LINE#         36
+  C:014DH         LINE#         36
   C:0169H         LINE#         37
-  C:016CH         LINE#         39
+  C:0169H         LINE#         38
   C:016CH         LINE#         40
   C:016FH         LINE#         41
   C:018BH         LINE#         42
   C:018BH         LINE#         43
   C:018EH         LINE#         45
-  C:018EH         LINE#         46
-  C:0191H         LINE#         47
+  C:0191H         LINE#         46
+  C:01ADH         LINE#         47
   C:01ADH         LINE#         48
-  C:01ADH         LINE#         49
-  C:01B0H         LINE#         50
-  C:01B0H         LINE#         51
-  C:01B3H         LINE#         52
-  C:01CFH         LINE#         53
-  C:01CFH         LINE#         54
-  C:01D2H         LINE#         55
-  C:01D2H         LINE#         56
-  C:01D4H         LINE#         57
-  C:01F0H         LINE#         58
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 4
+  C:01B0H         LINE#         49
+  C:01B3H         LINE#         50
+  C:01CFH         LINE#         51
+  C:01CFH         LINE#         52
+  C:01D2H         LINE#         53
+  C:01D4H         LINE#         54
+  C:01F0H         LINE#         55
+  C:01F0H         LINE#         56
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 4
 
 
-  C:01F0H         LINE#         59
-  C:01F3H         LINE#         60
-  C:01F3H         LINE#         61
-  C:01F5H         LINE#         62
-  C:0211H         LINE#         63
-  C:0211H         LINE#         64
-  C:0214H         LINE#         65
-  C:0214H         LINE#         66
-  C:0216H         LINE#         67
-  C:0232H         LINE#         68
-  C:0232H         LINE#         69
-  C:0235H         LINE#         70
-  C:0240H         LINE#         71
-  C:0240H         LINE#         72
-  C:0242H         LINE#         73
-  C:0242H         LINE#         74
+  C:01F3H         LINE#         57
+  C:01F5H         LINE#         58
+  C:0211H         LINE#         59
+  C:0211H         LINE#         60
+  C:0214H         LINE#         61
+  C:0216H         LINE#         62
+  C:0232H         LINE#         63
+  C:0232H         LINE#         64
+  C:0235H         LINE#         65
+  C:0235H         LINE#         66
+  C:0237H         LINE#         67
+  C:0242H         LINE#         68
+  C:0242H         LINE#         69
   -------         ENDPROC       VOICE_MODE
   -------         ENDMOD        MAIN
 
@@ -214,22 +211,22 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:0505H         PUBLIC        Time0_Routine
   D:00A8H         PUBLIC        IE
   B:00A0H.6       PUBLIC        Servo
-  C:06E9H         PUBLIC        Motor_Speed_ADD
+  C:06EAH         PUBLIC        Motor_Speed_ADD
   D:00B8H         PUBLIC        IP
-  C:06D8H         PUBLIC        Motor_Stop
+  C:06D9H         PUBLIC        Motor_Stop
   D:00D8H         PUBLIC        CCON
   B:0090H.4       PUBLIC        RIGHT_IN3
   B:0090H.5       PUBLIC        RIGHT_IN4
-  C:06C6H         PUBLIC        Motor_TurnLeft
+  C:06C7H         PUBLIC        Motor_TurnLeft
   C:001AH         PUBLIC        Motor_ForWard
   D:0098H         PUBLIC        SCON
   D:0089H         PUBLIC        TMOD
   D:0088H         PUBLIC        TCON
-  C:068EH         PUBLIC        Time0_Init
+  C:068FH         PUBLIC        Time0_Init
   D:008EH         PUBLIC        AUXR
-  C:06CFH         PUBLIC        Motor_Turnright
+  C:06D0H         PUBLIC        Motor_Turnright
   B:0090H.6       PUBLIC        EN1
-  C:06E1H         PUBLIC        Motor_ReduceSpeed
+  C:06E2H         PUBLIC        Motor_ReduceSpeed
   B:0090H.7       PUBLIC        EN2
   B:00A8H.1       PUBLIC        ET0
   B:0088H.5       PUBLIC        TF0
@@ -238,26 +235,26 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   B:0090H.2       PUBLIC        LEFT_IN1
   B:0090H.3       PUBLIC        LEFT_IN2
   B:0088H.4       PUBLIC        TR0
-  C:06BDH         PUBLIC        Motor_Back
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 5
-
-
+  C:06BEH         PUBLIC        Motor_Back
   X:0041H         PUBLIC        compare
   C:0003H         PUBLIC        Motor_AddSpeed
   D:00D0H         PUBLIC        PSW
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 5
+
+
   -------         PROC          TIME0_INIT
-  C:068EH         LINE#         11
-  C:068EH         LINE#         12
-  C:068EH         LINE#         13
-  C:0691H         LINE#         14
-  C:0694H         LINE#         15
-  C:0697H         LINE#         16
-  C:069AH         LINE#         17
-  C:069DH         LINE#         18
-  C:069FH         LINE#         19
-  C:06A1H         LINE#         20
-  C:06A3H         LINE#         21
-  C:06A5H         LINE#         22
+  C:068FH         LINE#         11
+  C:068FH         LINE#         12
+  C:068FH         LINE#         13
+  C:0692H         LINE#         14
+  C:0695H         LINE#         15
+  C:0698H         LINE#         16
+  C:069BH         LINE#         17
+  C:069EH         LINE#         18
+  C:06A0H         LINE#         19
+  C:06A2H         LINE#         20
+  C:06A4H         LINE#         21
+  C:06A6H         LINE#         22
   -------         ENDPROC       TIME0_INIT
   -------         PROC          MOTOR_ADDSPEED
   C:0003H         LINE#         29
@@ -266,10 +263,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:000AH         LINE#         32
   -------         ENDPROC       MOTOR_ADDSPEED
   -------         PROC          MOTOR_REDUCESPEED
-  C:06E1H         LINE#         39
-  C:06E1H         LINE#         40
-  C:06E1H         LINE#         41
-  C:06E8H         LINE#         42
+  C:06E2H         LINE#         39
+  C:06E2H         LINE#         40
+  C:06E2H         LINE#         41
+  C:06E9H         LINE#         42
   -------         ENDPROC       MOTOR_REDUCESPEED
   -------         PROC          MOTOR_INIT
   C:000EH         LINE#         50
@@ -291,49 +288,49 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:0022H         LINE#         73
   -------         ENDPROC       MOTOR_FORWARD
   -------         PROC          MOTOR_BACK
-  C:06BDH         LINE#         81
-  C:06BDH         LINE#         82
-  C:06BDH         LINE#         83
-  C:06BFH         LINE#         84
-  C:06C1H         LINE#         86
-  C:06C3H         LINE#         87
-  C:06C5H         LINE#         88
+  C:06BEH         LINE#         81
+  C:06BEH         LINE#         82
+  C:06BEH         LINE#         83
+  C:06C0H         LINE#         84
+  C:06C2H         LINE#         86
+  C:06C4H         LINE#         87
+  C:06C6H         LINE#         88
   -------         ENDPROC       MOTOR_BACK
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 6
-
-
   -------         PROC          MOTOR_TURNLEFT
-  C:06C6H         LINE#         96
-  C:06C6H         LINE#         97
-  C:06C6H         LINE#         98
-  C:06C8H         LINE#         99
-  C:06CAH         LINE#         101
-  C:06CCH         LINE#         102
-  C:06CEH         LINE#         103
+  C:06C7H         LINE#         96
+  C:06C7H         LINE#         97
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 6
+
+
+  C:06C7H         LINE#         98
+  C:06C9H         LINE#         99
+  C:06CBH         LINE#         101
+  C:06CDH         LINE#         102
+  C:06CFH         LINE#         103
   -------         ENDPROC       MOTOR_TURNLEFT
   -------         PROC          MOTOR_TURNRIGHT
-  C:06CFH         LINE#         111
-  C:06CFH         LINE#         112
-  C:06CFH         LINE#         113
-  C:06D1H         LINE#         114
-  C:06D3H         LINE#         116
-  C:06D5H         LINE#         117
-  C:06D7H         LINE#         118
+  C:06D0H         LINE#         111
+  C:06D0H         LINE#         112
+  C:06D0H         LINE#         113
+  C:06D2H         LINE#         114
+  C:06D4H         LINE#         116
+  C:06D6H         LINE#         117
+  C:06D8H         LINE#         118
   -------         ENDPROC       MOTOR_TURNRIGHT
   -------         PROC          MOTOR_STOP
-  C:06D8H         LINE#         126
-  C:06D8H         LINE#         127
-  C:06D8H         LINE#         128
-  C:06DAH         LINE#         129
-  C:06DCH         LINE#         131
-  C:06DEH         LINE#         132
-  C:06E0H         LINE#         133
+  C:06D9H         LINE#         126
+  C:06D9H         LINE#         127
+  C:06D9H         LINE#         128
+  C:06DBH         LINE#         129
+  C:06DDH         LINE#         131
+  C:06DFH         LINE#         132
+  C:06E1H         LINE#         133
   -------         ENDPROC       MOTOR_STOP
   -------         PROC          MOTOR_SPEED_ADD
-  C:06E9H         LINE#         135
-  C:06E9H         LINE#         136
-  C:06E9H         LINE#         137
-  C:06F0H         LINE#         138
+  C:06EAH         LINE#         135
+  C:06EAH         LINE#         136
+  C:06EAH         LINE#         137
+  C:06F1H         LINE#         138
   -------         ENDPROC       MOTOR_SPEED_ADD
   -------         PROC          TIME0_ROUTINE
   -------         DO            
@@ -349,19 +346,23 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:0531H         LINE#         150
   C:0531H         LINE#         151
   C:0535H         LINE#         152
-  C:0537H         LINE#         153
+  C:0537H         LINE#         154
+  C:0537H         LINE#         155
   C:053BH         LINE#         156
-  C:0541H         LINE#         157
-  C:054AH         LINE#         158
-  C:0552H         LINE#         159
-  C:0552H         LINE#         160
-  C:0554H         LINE#         161
-  C:0556H         LINE#         162
-  C:0558H         LINE#         163
+  C:053BH         LINE#         159
+  C:0541H         LINE#         160
+  C:054AH         LINE#         161
+  C:0552H         LINE#         162
+  C:0552H         LINE#         163
+  C:0554H         LINE#         164
+  C:0556H         LINE#         166
+  C:0556H         LINE#         167
+  C:0558H         LINE#         168
+  C:0558H         LINE#         169
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 7
+
+
   -------         ENDPROC       TIME0_ROUTINE
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 7
-
-
   -------         ENDMOD        MOTOR
 
   -------         MODULE        SERVO
@@ -418,10 +419,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   X:0017H         PUBLIC        RX1_COUNT
   X:0018H         PUBLIC        RX2_COUNT
   B:00A8H.3       PUBLIC        ET1
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 8
+
+
   D:008DH         PUBLIC        TH1
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 8
-
-
   D:008BH         PUBLIC        TL1
   B:0088H.6       PUBLIC        TR1
   X:0019H         PUBLIC        RX1_BUFF
@@ -431,7 +432,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   D:009CH         PUBLIC        BRT
   D:00A2H         PUBLIC        AUXR1
   D:00D0H         PUBLIC        PSW
-  C:06A6H         PUBLIC        _putchar
+  C:06A7H         PUBLIC        _putchar
   -------         PROC          _UART_INIT
   D:0007H         SYMBOL        Uart_n
   X:002EH         SYMBOL        GPIORX_Pin
@@ -478,10 +479,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:02DBH         LINE#         85
   C:02F6H         LINE#         87
   C:02F9H         LINE#         88
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 9
+
+
   C:02FCH         LINE#         89
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 9
-
-
   C:02FFH         LINE#         90
   C:030DH         LINE#         91
   C:030DH         LINE#         93
@@ -538,10 +539,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:061CH         LINE#         155
   C:061CH         LINE#         156
   C:0624H         LINE#         157
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 10
+
+
   C:0626H         LINE#         158
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 10
-
-
   -------         ENDPROC       _UART_SENDSTRING
   -------         PROC          _UART_SENDBUFF
   D:0006H         SYMBOL        Uart_n
@@ -557,15 +558,15 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   -------         ENDPROC       _UART_SENDBUFF
   -------         PROC          _PUTCHAR
   D:0006H         SYMBOL        c
-  C:06A6H         LINE#         183
-  C:06A8H         LINE#         184
-  C:06A8H         LINE#         185
-  C:06ACH         LINE#         186
-  C:06ACH         LINE#         187
-  C:06B3H         LINE#         188
-  C:06B3H         LINE#         189
-  C:06BAH         LINE#         190
-  C:06BCH         LINE#         191
+  C:06A7H         LINE#         183
+  C:06A9H         LINE#         184
+  C:06A9H         LINE#         185
+  C:06ADH         LINE#         186
+  C:06ADH         LINE#         187
+  C:06B4H         LINE#         188
+  C:06B4H         LINE#         189
+  C:06BBH         LINE#         190
+  C:06BDH         LINE#         191
   -------         ENDPROC       _PUTCHAR
   -------         PROC          UART1_ROUTINE
   -------         DO            
@@ -598,10 +599,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   -------         ENDMOD        ?C?CLDPTR
 
   -------         MODULE        ?C?ILDIX
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 11
+
+
   C:003FH         PUBLIC        ?C?ILDIX
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/05/2023  22:28:25  PAGE 11
-
-
   -------         ENDMOD        ?C?ILDIX
 
   -------         MODULE        ?C?SLDIV
@@ -625,5 +626,5 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:00B5H         PUBLIC        ?C?ULDIV
   -------         ENDMOD        ?C?ULDIV
 
-Program Size: data=9.2 xdata=67 code=1777
+Program Size: data=9.2 xdata=67 code=1778
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
