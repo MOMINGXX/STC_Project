@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    01/09/2023  21:25:34  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    01/10/2023  00:03:53  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
@@ -59,7 +59,7 @@ LINK MAP OF MODULE:  .\Objects\Project (MAIN)
             CODE    03F7H     008CH     UNIT         ?C_C51STARTUP
             CODE    0483H     0082H     UNIT         ?PR?UART1_ROUTINE?UART
             CODE    0505H     0060H     UNIT         ?PR?TIME0_ROUTINE?MOTOR
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 2
 
 
             CODE    0565H     0044H     UNIT         ?C?LDIV
@@ -76,7 +76,6 @@ LINK MAP OF MODULE:  .\Objects\Project (MAIN)
             CODE    06D0H     0009H     UNIT         ?PR?MOTOR_TURNRIGHT?MOTOR
             CODE    06D9H     0009H     UNIT         ?PR?MOTOR_STOP?MOTOR
             CODE    06E2H     0008H     UNIT         ?PR?MOTOR_REDUCESPEED?MOTOR
-            CODE    06EAH     0008H     UNIT         ?PR?MOTOR_SPEED_ADD?MOTOR
 
 
 
@@ -119,10 +118,10 @@ SEGMENT                               XDATA_GROUP
 
 
 
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 3
-
-
 SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 3
+
+
 
   VALUE           TYPE          NAME
   ----------------------------------
@@ -179,10 +178,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:01D4H         LINE#         54
   C:01F0H         LINE#         55
   C:01F0H         LINE#         56
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 4
-
-
   C:01F3H         LINE#         57
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 4
+
+
   C:01F5H         LINE#         58
   C:0211H         LINE#         59
   C:0211H         LINE#         60
@@ -211,7 +210,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:0505H         PUBLIC        Time0_Routine
   D:00A8H         PUBLIC        IE
   B:00A0H.6       PUBLIC        Servo
-  C:06EAH         PUBLIC        Motor_Speed_ADD
   D:00B8H         PUBLIC        IP
   C:06D9H         PUBLIC        Motor_Stop
   D:00D8H         PUBLIC        CCON
@@ -239,11 +237,11 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   X:0041H         PUBLIC        compare
   C:0003H         PUBLIC        Motor_AddSpeed
   D:00D0H         PUBLIC        PSW
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 5
-
-
   -------         PROC          TIME0_INIT
   C:068FH         LINE#         11
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 5
+
+
   C:068FH         LINE#         12
   C:068FH         LINE#         13
   C:0692H         LINE#         14
@@ -299,11 +297,11 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   -------         PROC          MOTOR_TURNLEFT
   C:06C7H         LINE#         96
   C:06C7H         LINE#         97
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 6
-
-
   C:06C7H         LINE#         98
   C:06C9H         LINE#         99
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 6
+
+
   C:06CBH         LINE#         101
   C:06CDH         LINE#         102
   C:06CFH         LINE#         103
@@ -326,42 +324,33 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:06DFH         LINE#         132
   C:06E1H         LINE#         133
   -------         ENDPROC       MOTOR_STOP
-  -------         PROC          MOTOR_SPEED_ADD
-  C:06EAH         LINE#         135
-  C:06EAH         LINE#         136
-  C:06EAH         LINE#         137
-  C:06F1H         LINE#         138
-  -------         ENDPROC       MOTOR_SPEED_ADD
   -------         PROC          TIME0_ROUTINE
   -------         DO            
   X:003FH         SYMBOL        count1
   X:0040H         SYMBOL        count2
   -------         ENDDO         
-  C:0505H         LINE#         140
-  C:0514H         LINE#         144
-  C:0517H         LINE#         145
-  C:051AH         LINE#         147
-  C:0520H         LINE#         148
-  C:0529H         LINE#         149
-  C:0531H         LINE#         150
-  C:0531H         LINE#         151
-  C:0535H         LINE#         152
-  C:0537H         LINE#         154
-  C:0537H         LINE#         155
-  C:053BH         LINE#         156
-  C:053BH         LINE#         159
-  C:0541H         LINE#         160
-  C:054AH         LINE#         161
-  C:0552H         LINE#         162
-  C:0552H         LINE#         163
-  C:0554H         LINE#         164
-  C:0556H         LINE#         166
-  C:0556H         LINE#         167
-  C:0558H         LINE#         168
-  C:0558H         LINE#         169
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 7
-
-
+  C:0505H         LINE#         136
+  C:0514H         LINE#         140
+  C:0517H         LINE#         141
+  C:051AH         LINE#         143
+  C:0520H         LINE#         144
+  C:0529H         LINE#         145
+  C:0531H         LINE#         146
+  C:0531H         LINE#         147
+  C:0535H         LINE#         148
+  C:0537H         LINE#         150
+  C:0537H         LINE#         151
+  C:053BH         LINE#         152
+  C:053BH         LINE#         155
+  C:0541H         LINE#         156
+  C:054AH         LINE#         157
+  C:0552H         LINE#         158
+  C:0552H         LINE#         159
+  C:0554H         LINE#         160
+  C:0556H         LINE#         162
+  C:0556H         LINE#         163
+  C:0558H         LINE#         164
+  C:0558H         LINE#         165
   -------         ENDPROC       TIME0_ROUTINE
   -------         ENDMOD        MOTOR
 
@@ -370,6 +359,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   D:0080H         PUBLIC        P0
   D:0090H         PUBLIC        P1
   D:00A0H         PUBLIC        P2
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 7
+
+
   D:00B0H         PUBLIC        P3
   D:00C0H         PUBLIC        P4
   D:00C8H         PUBLIC        P5
@@ -419,9 +411,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   X:0017H         PUBLIC        RX1_COUNT
   X:0018H         PUBLIC        RX2_COUNT
   B:00A8H.3       PUBLIC        ET1
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 8
-
-
   D:008DH         PUBLIC        TH1
   D:008BH         PUBLIC        TL1
   B:0088H.6       PUBLIC        TR1
@@ -430,6 +419,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   D:009BH         PUBLIC        S2BUF
   D:009AH         PUBLIC        S2CON
   D:009CH         PUBLIC        BRT
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 8
+
+
   D:00A2H         PUBLIC        AUXR1
   D:00D0H         PUBLIC        PSW
   C:06A7H         PUBLIC        _putchar
@@ -479,9 +471,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:02DBH         LINE#         85
   C:02F6H         LINE#         87
   C:02F9H         LINE#         88
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 9
-
-
   C:02FCH         LINE#         89
   C:02FFH         LINE#         90
   C:030DH         LINE#         91
@@ -490,6 +479,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:0313H         LINE#         97
   C:0316H         LINE#         98
   C:0319H         LINE#         99
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 9
+
+
   C:031CH         LINE#         100
   C:031DH         LINE#         101
   C:0328H         LINE#         102
@@ -539,9 +531,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:061CH         LINE#         155
   C:061CH         LINE#         156
   C:0624H         LINE#         157
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 10
-
-
   C:0626H         LINE#         158
   -------         ENDPROC       _UART_SENDSTRING
   -------         PROC          _UART_SENDBUFF
@@ -550,6 +539,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   X:003DH         SYMBOL        Len
   C:0627H         LINE#         168
   C:0634H         LINE#         169
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 10
+
+
   C:0634H         LINE#         170
   C:0642H         LINE#         171
   C:0642H         LINE#         172
@@ -599,9 +591,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   -------         ENDMOD        ?C?CLDPTR
 
   -------         MODULE        ?C?ILDIX
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/09/2023  21:25:34  PAGE 11
-
-
   C:003FH         PUBLIC        ?C?ILDIX
   -------         ENDMOD        ?C?ILDIX
 
@@ -610,6 +599,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   -------         ENDMOD        ?C?SLDIV
 
   -------         MODULE        ?C?LNEG
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  01/10/2023  00:03:53  PAGE 11
+
+
   C:0055H         PUBLIC        ?C?LNEG
   -------         ENDMOD        ?C?LNEG
 
@@ -626,5 +618,5 @@ SYMBOL TABLE OF MODULE:  .\Objects\Project (MAIN)
   C:00B5H         PUBLIC        ?C?ULDIV
   -------         ENDMOD        ?C?ULDIV
 
-Program Size: data=9.2 xdata=67 code=1778
+Program Size: data=9.2 xdata=67 code=1770
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

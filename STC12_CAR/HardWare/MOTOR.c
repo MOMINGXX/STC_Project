@@ -42,7 +42,7 @@ void Motor_ReduceSpeed()
 }
 
 /****
-	@brief      前进
+	@brief    	电机，定时器初始化
 	@param   	无
 	@return     无       	
 	Sample usage:    Motor_Init(); 
@@ -132,11 +132,7 @@ void Motor_Stop()
 	RIGHT_IN4=0;
 }
 
-void Motor_Speed_ADD()
-{
-	compare +=10;
-}
-
+//定时器0中断
 void Time0_Routine() interrupt 1
 {
 	static uint8_t count1=0; //电机计数标志

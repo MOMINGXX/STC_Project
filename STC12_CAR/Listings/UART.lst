@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 1   
+C51 COMPILER V9.60.7.0   UART                                                              01/10/2023 00:03:53 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART
@@ -10,17 +10,17 @@ line level    source
 
    1          #include "UART.h"
    2          
-   3          uint8_t DAT1;                           //存放接收的字符
-   4          uint8_t RX1_BUFF[10];           //接收的数据    缓冲区
-   5          uint8_t RX1_DAT[10];                    //存放接收的数据
-   6          uint8_t RX1_COUNT=0;                    //接收计数
-   7          bit Flag1 = 0;                          //标志位
+   3          uint8_t DAT1;                                           //存放接收的字符
+   4          uint8_t RX1_BUFF[DATA_MAX];                     //接收的数据    缓冲区
+   5          uint8_t RX1_DAT[DATA_MAX];                      //存放接收的数据
+   6          uint8_t RX1_COUNT=0;                            //接收计数
+   7          bit Flag1 = 0;                                          //标志位
    8          
-   9          uint8_t DAT2;                           //存放接收的字符
-  10          uint8_t RX2_BUFF[10];           //接收的数据    缓冲区
-  11          uint8_t RX2_DAT[10];                    //存放接收的数据
-  12          uint8_t RX2_COUNT=0;                    //接收计数
-  13          bit Flag2 = 0;                          //标志位
+   9          uint8_t DAT2;                                           //存放接收的字符
+  10          uint8_t RX2_BUFF[DATA_MAX];                     //接收的数据    缓冲区
+  11          uint8_t RX2_DAT[DATA_MAX];                      //存放接收的数据
+  12          uint8_t RX2_COUNT=0;                            //接收计数
+  13          bit Flag2 = 0;                                          //标志位
   14          
   15          
   16          /****
@@ -62,7 +62,7 @@ line level    source
   52   4                                      ET1 = 0;                        //禁止定时器中断
   53   4                                      TR1 = 1;                        //定时器1开始计时
   54   4                                      #endif
-C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 2   
+C51 COMPILER V9.60.7.0   UART                                                              01/10/2023 00:03:53 PAGE 2   
 
   55   4                              }
   56   3                              else if(TIM_BRT == Tim_n)
@@ -126,7 +126,7 @@ line level    source
  114   2              }
  115   1      }
  116          
-C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 3   
+C51 COMPILER V9.60.7.0   UART                                                              01/10/2023 00:03:53 PAGE 3   
 
  117          /****
  118                  @brief      串口发送一个字节
@@ -190,7 +190,7 @@ line level    source
  176          /****
  177                  @brief      printf打印
  178                  @param          c
-C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 4   
+C51 COMPILER V9.60.7.0   UART                                                              01/10/2023 00:03:53 PAGE 4   
 
  179                  @return     c           
  180                  Sample usage:  printf("Hello\n"); 
@@ -254,7 +254,7 @@ line level    source
  238   3                              for(i=0;i<RX1_COUNT;i++)
  239   3                              {
  240   4                                      RX1_DAT[i] = RX1_BUFF[i];
-C51 COMPILER V9.60.7.0   UART                                                              01/09/2023 21:25:33 PAGE 5   
+C51 COMPILER V9.60.7.0   UART                                                              01/10/2023 00:03:53 PAGE 5   
 
  241   4                              }
  242   3                              RX1_COUNT=0;

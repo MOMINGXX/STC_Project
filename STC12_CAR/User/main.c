@@ -1,11 +1,11 @@
 #include "UART.h"
 #include "MOTOR.h"
-//#include <stdio.h>
+#include <stdio.h>
 #include <string.h>
 
 //char arr[]={0x10,0x12,0x03,0x04,6,7,5};
 
-void Voice_Mode();
+void MOTOR_STATE_Mode();
 
 void main()
 {
@@ -17,7 +17,7 @@ void main()
 	while(1)
 	{
 		
-		Voice_Mode();
+		MOTOR_STATE_Mode();
 		/* test
 		if(NULL != strstr(RX_DAT,"FORWARD"))
 			P1=0;
@@ -29,7 +29,7 @@ void main()
 	}
 }
 
-void Voice_Mode()
+void MOTOR_STATE_Mode()
 {
 	if(Flag1==1)
 	{
@@ -64,6 +64,7 @@ void Voice_Mode()
 			Motor_AddSpeed(); 
 		}
 		Flag1=0;
+		
 		Uart_SendString(UART_1,RX1_DAT); 
 	}
 }

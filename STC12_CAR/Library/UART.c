@@ -1,16 +1,16 @@
 #include "UART.h"
 
-uint8_t DAT1;				//存放接收的字符
-uint8_t RX1_BUFF[10];		//接收的数据	缓冲区
-uint8_t RX1_DAT[10];			//存放接收的数据
-uint8_t RX1_COUNT=0;			//接收计数
-bit Flag1 = 0;				//标志位
+uint8_t DAT1;						//存放接收的字符
+uint8_t RX1_BUFF[DATA_MAX];			//接收的数据	缓冲区
+uint8_t RX1_DAT[DATA_MAX];			//存放接收的数据
+uint8_t RX1_COUNT=0;				//接收计数
+bit Flag1 = 0;						//标志位
 
-uint8_t DAT2;				//存放接收的字符
-uint8_t RX2_BUFF[10];		//接收的数据	缓冲区
-uint8_t RX2_DAT[10];			//存放接收的数据
-uint8_t RX2_COUNT=0;			//接收计数
-bit Flag2 = 0;				//标志位
+uint8_t DAT2;						//存放接收的字符
+uint8_t RX2_BUFF[DATA_MAX];			//接收的数据	缓冲区
+uint8_t RX2_DAT[DATA_MAX];			//存放接收的数据
+uint8_t RX2_COUNT=0;				//接收计数
+bit Flag2 = 0;						//标志位
 
 
 /****
