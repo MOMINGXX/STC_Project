@@ -1,0 +1,11 @@
+".\Objects\main.obj",
+".\Objects\MOTOR_HANDLER.obj",
+".\Objects\MOTOR.obj",
+".\Objects\SERVO.obj",
+".\Objects\BEEP.obj",
+".\Objects\ULTRASONIC.obj",
+".\Objects\UART.obj",
+".\Objects\STC12_DELAY.obj" 
+TO ".\Objects\Project" 
+PRINT(".\Listings\Project.m51") RAMSIZE(256) 
+DISABLEWARNING (16) 
