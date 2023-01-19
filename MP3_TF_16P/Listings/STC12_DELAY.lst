@@ -1,0 +1,406 @@
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE STC12_DELAY
+OBJECT MODULE PLACED IN .\Objects\STC12_DELAY.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE Library\STC12_DELAY.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\HardWare;.\U
+                    -ser;.\Library;.\Library) DEBUG OBJECTEXTEND PRINT(.\Listings\STC12_DELAY.lst) OBJECT(.\Objects\STC12_DELAY.obj)
+
+line level    source
+
+   1          #include "STC12_DELAY.h"
+   2          
+   3          #if (SYS_CLK == 24000000)
+              
+              /****
+                      @brief      —”≥Ÿ1Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay1us(); —”≥Ÿ1us
+              ****/
+              void Delay1us()         
+              {
+                  uint8_t i;
+                      i = 3;
+                      while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ5Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay5us(); —”≥Ÿ5us
+              ****/
+              void Delay5us() 
+              {
+                      uint8_t i;
+                      i = 27;
+                      while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ10Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay10us(); —”≥Ÿ10us
+              ****/
+              void Delay10us()        
+              {
+                      uint8_t i;
+                      i = 57;
+                      while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ15Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay15us(); —”≥Ÿ15us
+              ****/
+              void Delay15us()                
+              {
+                      uint8_t i;
+                      _nop_();
+                      _nop_();
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 2   
+
+                      i = 38;
+                      while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ50Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay50us(); —”≥Ÿ50us
+              ****/
+              void Delay50us()                
+              {
+                      uint8_t i;
+                      uint8_t j;
+                  _nop_();
+                  _nop_();
+                      i = 2;
+                      j = 38;
+                      do
+                      {
+                              while (--j);
+                      } while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ100Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay100us(); —”≥Ÿ100us
+              ****/
+              void Delay100us()       
+              {
+                      uint8_t i;
+                      uint8_t j;
+                  _nop_();
+                  _nop_();
+                      i = 3;
+                      j = 81;
+                      do
+                      {
+                              while (--j);
+                      } while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ1∫¡√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay1ms(); —”≥Ÿ1ms
+              ****/
+              void Delay1ms()
+              {
+                      uint8_t i;
+                      uint8_t j;
+                  _nop_();
+                  _nop_();
+                      i = 24;
+                      j = 84;
+                      do
+                      {
+                              while (--j);
+                      } while (--i);
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 3   
+
+              }
+              
+              #elif (SYS_CLK == 12000000)             //12MHz
+              
+              /****
+                      @brief      —”≥Ÿ1Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay1us(); —”≥Ÿ1us
+              ****/
+              void Delay1us()         //@12.000
+              {
+                      _nop_();
+                  _nop_();
+              }
+              
+              /****
+                      @brief      —”≥Ÿ5Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay5us(); —”≥Ÿ5us
+              ****/
+              void Delay5us()         //@12.000
+              {
+                      uint8_t i;
+                      i = 12;
+                      while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ10Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay10us(); —”≥Ÿ10us
+              ****/
+              void Delay10us()                
+              {
+                      uint8_t i;
+                      i = 27;
+                      while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ15Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay15us(); —”≥Ÿ15us
+              ****/
+              void Delay15us()                
+              {
+                      uint8_t i;
+                      _nop_();
+                      _nop_();
+                      i = 38;
+                      while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ50Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay100us(); —”≥Ÿ50us
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 4   
+
+              ****/
+              void Delay50us()                
+              {
+                      uint8_t i;
+                      uint8_t j;
+                  _nop_();
+                  _nop_();
+                      i = 1;
+                      j = 145;
+                      do
+                      {
+                              while (--j);
+                      }while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ100Œ¢√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay100us(); —”≥Ÿ100us
+              ****/
+              void Delay100us()               
+              {
+                      uint8_t i;
+                      uint8_t j;
+                  _nop_();
+                  _nop_();
+                      i = 2;
+                      j = 38;
+                      do
+                      {
+                              while (--j);
+                      } while (--i);
+              }
+              
+              /****
+                      @brief      —”≥Ÿ1∫¡√Î
+                      @param          Œﬁ      
+                      @return     Œﬁ          
+                      Sample usage:  Delay1ms(); —”≥Ÿ1ms
+              ****/
+              void Delay1ms() 
+              {
+                      uint8_t i;
+                      uint8_t j;
+                  _nop_();
+                  _nop_();
+                      i = 12;
+                      j = 168;
+                      do
+                      {
+                              while (--j);
+                      } while (--i);
+              }
+              
+              #else //11059200MHz
+ 235          
+ 236          /****
+ 237                  @brief      —”≥Ÿ1Œ¢√Î
+ 238                  @param          Œﬁ      
+ 239                  @return     Œﬁ          
+ 240                  Sample usage: Delay1us(); —”≥Ÿ1us
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 5   
+
+ 241          ****/
+ 242          void Delay1us()         
+ 243          {
+ 244   1              _nop_();
+ 245   1      }
+ 246          
+ 247          /****
+ 248                  @brief      —”≥Ÿ5Œ¢√Î
+ 249                  @param          Œﬁ      
+ 250                  @return     Œﬁ          
+ 251                  Sample usage:  Delay5us(); —”≥Ÿ5us
+ 252          ****/
+ 253          void Delay5us() 
+ 254          {
+ 255   1              uint8_t i;
+ 256   1              _nop_();
+ 257   1              _nop_();
+ 258   1          _nop_();
+ 259   1              i = 10;
+ 260   1              while (--i);
+ 261   1      }
+ 262          
+ 263          /****
+ 264                  @brief      —”≥Ÿ10Œ¢√Î
+ 265                  @param          Œﬁ      
+ 266                  @return     Œﬁ          
+ 267                  Sample usage:  Delay10us(); —”≥Ÿ10us
+ 268          ****/
+ 269          void Delay10us()                
+ 270          {
+ 271   1              uint8_t i;
+ 272   1              _nop_();
+ 273   1              _nop_();
+ 274   1          _nop_();
+ 275   1              i = 24;
+ 276   1              while (--i);
+ 277   1      }
+ 278          
+ 279          /****
+ 280                  @brief      —”≥Ÿ15Œ¢√Î
+ 281                  @param          Œﬁ      
+ 282                  @return     Œﬁ          
+ 283                  Sample usage:  Delay15us(); —”≥Ÿ15us
+ 284          ****/
+ 285          void Delay15us()                
+ 286          {
+ 287   1              uint8_t i;
+ 288   1              _nop_();
+ 289   1              _nop_();
+ 290   1              i = 38;
+ 291   1              while (--i);
+ 292   1      }
+ 293          
+ 294          /****
+ 295                  @brief      —”≥Ÿ50Œ¢√Î
+ 296                  @param          Œﬁ      
+ 297                  @return     Œﬁ          
+ 298                  Sample usage:  Delay100us(); —”≥Ÿ50us
+ 299          ****/
+ 300          void Delay50us()        
+ 301          {
+ 302   1              uint8_t i;
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 6   
+
+ 303   1              uint8_t j;
+ 304   1          _nop_();
+ 305   1          _nop_();
+ 306   1          _nop_();
+ 307   1              i = 1;
+ 308   1              j = 133;
+ 309   1              do
+ 310   1              {
+ 311   2                      while (--j);
+ 312   2              } while (--i);
+ 313   1      }
+ 314          
+ 315          /****
+ 316                  @brief      —”≥Ÿ100Œ¢√Î
+ 317                  @param          Œﬁ      
+ 318                  @return     Œﬁ          
+ 319                  Sample usage:  Delay100us(); —”≥Ÿ100us
+ 320          ****/
+ 321          void Delay100us()               
+ 322          {
+ 323   1              uint8_t i;
+ 324   1              uint8_t j;
+ 325   1              i = 2;
+ 326   1              j = 15;
+ 327   1              do
+ 328   1              {
+ 329   2                      while (--j);
+ 330   2              }while (--i);
+ 331   1      }
+ 332          
+ 333          /****
+ 334                  @brief      —”≥Ÿ1∫¡√Î
+ 335                  @param          Œﬁ      
+ 336                  @return     Œﬁ          
+ 337                  Sample usage:  Delay1ms(); —”≥Ÿ1ms
+ 338          ****/
+ 339          void Delay1ms()
+ 340          {
+ 341   1              uint8_t i;
+ 342   1              uint8_t j;
+ 343   1              _nop_();
+ 344   1              i = 11;
+ 345   1              j = 190;
+ 346   1              do
+ 347   1              {
+ 348   2                      while (--j);
+ 349   2              }while(--i);
+ 350   1      }
+ 351          
+ 352          #endif
+ 353          
+ 354          /****
+ 355                  @brief      —”≥Ÿtime∫¡√Î
+ 356                  @param          time    —”≥Ÿ ±º‰(1-65535)       
+ 357                  @return     Œﬁ          
+ 358                  Sample usage:  Delay(1000); —”≥Ÿ1s
+ 359          ****/
+ 360          void Delay(uint16_t time)
+ 361          {
+ 362   1              if(time < 1)
+ 363   1              {
+ 364   2                      time = 1;
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 7   
+
+ 365   2              }       
+ 366   1              do 
+ 367   1              { 
+ 368   2                      Delay1ms();
+ 369   2              }while (--time);
+ 370   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     86    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

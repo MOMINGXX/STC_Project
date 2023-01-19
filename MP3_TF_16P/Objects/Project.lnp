@@ -1,0 +1,7 @@
+".\Objects\main.obj",
+".\Objects\MP3_TF_16P.obj",
+".\Objects\UART.obj",
+".\Objects\STC12_DELAY.obj" 
+TO ".\Objects\Project" 
+PRINT(".\Listings\Project.m51") RAMSIZE(256) 
+DISABLEWARNING (16) 

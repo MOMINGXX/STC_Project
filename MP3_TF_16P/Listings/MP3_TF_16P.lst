@@ -1,0 +1,107 @@
+C51 COMPILER V9.60.7.0   MP3_TF_16P                                                        01/19/2023 23:50:45 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MP3_TF_16P
+OBJECT MODULE PLACED IN .\Objects\MP3_TF_16P.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE HardWare\MP3_TF_16P.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\HardWare;.\U
+                    -ser;.\Library;.\Library) DEBUG OBJECTEXTEND PRINT(.\Listings\MP3_TF_16P.lst) OBJECT(.\Objects\MP3_TF_16P.obj)
+
+line level    source
+
+   1          #include "MP3_TF_16P.h"
+   2          
+   3          static uint8_t Send_Buf[10] = {0} ; 
+   4          
+   5          /****
+   6                  * @brief        和校验                            
+   7                  * @param        Str     接收的指令地址
+   8              * @param    Len     指令长度        
+   9                  * @return   无  
+  10                  * Sample usage: DoSum(Send_buf,6);
+  11              */
+  12          static void DoSum(uint8_t *Str,uint8_t Len)
+  13          {
+  14   1          uint16_t xorsum = 0;
+  15   1          uint8_t i = 0;
+  16   1          for(i=0;i<Len;i++)
+  17   1          {
+  18   2              xorsum += Str[i];
+  19   2          }
+  20   1          xorsum = 0 - xorsum;
+  21   1          *(Str + i) = (uint8_t)(xorsum >> 8);
+  22   1          *(Str + i + 1) = (uint8_t)(xorsum & 0x00ff);
+  23   1      }
+  24          
+  25          /****
+  26                  * @brief        发送指令                        
+  27                  * @param    Len     指令长度    
+  28                  * @return   无  
+  29                  * Sample usage: Send_Cmd(6);
+  30              */
+  31          static void Send_Cmd(uint8_t Len)
+  32          {
+  33   1          uint8_t i = 0;
+  34   1          Uart_SendByte(UART_1,0x7E);        //起始
+  35   1          for(i=0;i<Len;i++)
+  36   1          {
+  37   2              Uart_SendByte(UART_1,Send_Buf[i]);     //数据
+  38   2          }
+  39   1          Uart_SendByte(UART_1,0xEF);        //结束
+  40   1      }
+  41          
+  42          /****
+  43                  * @brief        对模块发送指令  
+  44              * @param    CMD         控制指令    播放 暂停...
+  45              * @param    feedback        命令反馈    0x00 不反馈  0x01 反馈
+  46                  * @param    dat         指定歌曲        0 ~ 0xffff
+  47              * @return   无      
+  48                  * Sample usage: Uart_SendCMD(Specify_Music ,0x00,36);
+  49              */
+  50          void Uart_SendCMD(uint8_t CMD ,uint8_t feedback ,uint16_t dat)
+  51          {
+  52   1          Send_Buf[0] = 0xff; //保留字节 
+  53   1          Send_Buf[1] = 0x06; //长度
+  54   1          Send_Buf[2] = CMD; //控制指令
+C51 COMPILER V9.60.7.0   MP3_TF_16P                                                        01/19/2023 23:50:45 PAGE 2   
+
+  55   1          Send_Buf[3] = feedback;//是否需要反馈
+  56   1          Send_Buf[4] = (uint8_t)(dat >> 8);//datah 
+  57   1          Send_Buf[5] = (uint8_t)(dat); //datal 
+  58   1          DoSum(&Send_Buf[0],6); //校验
+  59   1          Send_Cmd(8); 
+  60   1      }
+  61          
+  62          /****
+  63                  * @brief        播放指定文件夹指定歌曲 
+  64              * @param    CMD         控制指令    播放 暂停...
+  65              * @param    feedback        命令反馈    0x00 不反馈  0x01 反馈
+  66              * @param    Folder          指定文件夹  0-99
+  67                  * @param    dat         指定歌曲        0 ~ 0xff
+  68              * @return   无      
+  69                  * Sample usage:Uart_SendFolder(Specify_Folder,0x00,2,6);
+  70              */
+  71          void Uart_SendFolder(uint8_t CMD,uint8_t feedback,uint8_t Folder,uint8_t dat) 
+  72          {
+  73   1              Send_Buf[0] = 0xff; //保留字节 
+  74   1              Send_Buf[1] = 0x06; //长度
+  75   1              Send_Buf[2] = CMD; //控制指令
+  76   1              Send_Buf[3] = feedback;//是否需要反馈
+  77   1              Send_Buf[4] = (uint8_t)(Folder);
+  78   1              Send_Buf[5] = (uint8_t)(dat); 
+  79   1              DoSum(&Send_Buf[0],6); //校验
+  80   1              Send_Cmd(8);  //发送此帧数据
+  81   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    260    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     10      11
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
