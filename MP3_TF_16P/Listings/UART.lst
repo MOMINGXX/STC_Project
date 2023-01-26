@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   UART                                                              01/19/2023 23:50:45 PAGE 1   
+C51 COMPILER V9.60.7.0   UART                                                              01/26/2023 23:34:12 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART
@@ -62,7 +62,7 @@ line level    source
   52   4                                      ET1 = 0;                        //禁止定时器中断
   53   4                                      TR1 = 1;                        //定时器1开始计时
   54   4                                      #endif
-C51 COMPILER V9.60.7.0   UART                                                              01/19/2023 23:50:45 PAGE 2   
+C51 COMPILER V9.60.7.0   UART                                                              01/26/2023 23:34:12 PAGE 2   
 
   55   4                              }
   56   3                              else if(TIM_BRT == Tim_n)
@@ -126,7 +126,7 @@ line level    source
  114   2              }
  115   1      }
  116          
-C51 COMPILER V9.60.7.0   UART                                                              01/19/2023 23:50:45 PAGE 3   
+C51 COMPILER V9.60.7.0   UART                                                              01/26/2023 23:34:12 PAGE 3   
 
  117          /****
  118                  @brief      串口发送一个字节
@@ -190,7 +190,7 @@ line level    source
  176          /****
  177                  @brief      printf打印
  178                  @param          c
-C51 COMPILER V9.60.7.0   UART                                                              01/19/2023 23:50:45 PAGE 4   
+C51 COMPILER V9.60.7.0   UART                                                              01/26/2023 23:34:12 PAGE 4   
 
  179                  @return     c           
  180                  Sample usage:  printf("Hello\n"); 
@@ -254,7 +254,7 @@ line level    source
  238   3                              for(i=0;i<RX1_COUNT;i++)
  239   3                              {
  240   4                                      RX1_DAT[i] = RX1_BUFF[i];
-C51 COMPILER V9.60.7.0   UART                                                              01/19/2023 23:50:45 PAGE 5   
+C51 COMPILER V9.60.7.0   UART                                                              01/26/2023 23:34:12 PAGE 5   
 
  241   4                              }
  242   3                              RX1_COUNT=0;
@@ -291,7 +291,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    524    ----
+   CODE SIZE        =    527    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =    405      15
    PDATA SIZE       =   ----    ----

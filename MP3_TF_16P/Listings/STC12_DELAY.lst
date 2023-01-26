@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 1   
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/26/2023 23:34:12 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE STC12_DELAY
@@ -62,7 +62,7 @@ line level    source
                       uint8_t i;
                       _nop_();
                       _nop_();
-C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 2   
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/26/2023 23:34:12 PAGE 2   
 
                       i = 38;
                       while (--i);
@@ -126,7 +126,7 @@ line level    source
                       {
                               while (--j);
                       } while (--i);
-C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 3   
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/26/2023 23:34:12 PAGE 3   
 
               }
               
@@ -190,7 +190,7 @@ line level    source
                       @param          无      
                       @return     无          
                       Sample usage:  Delay100us(); 延迟50us
-C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 4   
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/26/2023 23:34:12 PAGE 4   
 
               ****/
               void Delay50us()                
@@ -254,7 +254,7 @@ line level    source
  238                  @param          无      
  239                  @return     无          
  240                  Sample usage: Delay1us(); 延迟1us
-C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 5   
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/26/2023 23:34:12 PAGE 5   
 
  241          ****/
  242          void Delay1us()         
@@ -318,7 +318,7 @@ line level    source
  300          void Delay50us()        
  301          {
  302   1              uint8_t i;
-C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 6   
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/26/2023 23:34:12 PAGE 6   
 
  303   1              uint8_t j;
  304   1          _nop_();
@@ -382,7 +382,7 @@ line level    source
  362   1              if(time < 1)
  363   1              {
  364   2                      time = 1;
-C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/19/2023 23:50:45 PAGE 7   
+C51 COMPILER V9.60.7.0   STC12_DELAY                                                       01/26/2023 23:34:12 PAGE 7   
 
  365   2              }       
  366   1              do 

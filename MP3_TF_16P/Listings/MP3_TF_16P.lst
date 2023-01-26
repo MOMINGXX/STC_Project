@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MP3_TF_16P                                                        01/19/2023 23:50:45 PAGE 1   
+C51 COMPILER V9.60.7.0   MP3_TF_16P                                                        01/26/2023 23:34:12 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MP3_TF_16P
@@ -62,7 +62,7 @@ line level    source
   52   1          Send_Buf[0] = 0xff; //保留字节 
   53   1          Send_Buf[1] = 0x06; //长度
   54   1          Send_Buf[2] = CMD; //控制指令
-C51 COMPILER V9.60.7.0   MP3_TF_16P                                                        01/19/2023 23:50:45 PAGE 2   
+C51 COMPILER V9.60.7.0   MP3_TF_16P                                                        01/26/2023 23:34:12 PAGE 2   
 
   55   1          Send_Buf[3] = feedback;//是否需要反馈
   56   1          Send_Buf[4] = (uint8_t)(dat >> 8);//datah 

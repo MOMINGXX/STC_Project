@@ -1,5 +1,6 @@
 ".\Objects\main.obj",
 ".\Objects\MP3_TF_16P.obj",
+".\Objects\LD3320.obj",
 ".\Objects\UART.obj",
 ".\Objects\STC12_DELAY.obj" 
 TO ".\Objects\Project" 

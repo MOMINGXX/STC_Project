@@ -1,0 +1,436 @@
+C51 COMPILER V9.60.7.0   WS2812                                                            01/27/2023 00:08:37 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE WS2812
+OBJECT MODULE PLACED IN ..\obj\WS2812.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE ..\code\WS2812.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\code;..\user) DE
+                    -BUG OBJECTEXTEND PRINT(.\WS2812.lst) OBJECT(..\obj\WS2812.obj)
+
+line level    source
+
+   1          #include "config.h"
+   2          
+   3          #define numLEDs 44   //灯的个数
+   4          unsigned char buf_R[numLEDs] = {0};//颜色缓存
+   5          unsigned char buf_G[numLEDs] = {0};
+   6          unsigned char buf_B[numLEDs] = {0};
+   7          
+   8          
+   9          void Delay80us()                //@24.000MHz
+  10          {
+  11   1              unsigned char xdata i, j;
+  12   1      
+  13   1              i = 2;
+  14   1              j = 219;
+  15   1              do
+  16   1              {
+  17   2                      while (--j);
+  18   2              } while (--i);
+  19   1      }
+  20          
+  21          void HAL_Delay(unsigned int t)
+  22          {
+  23   1                      unsigned int x,y;
+  24   1                for(x=114;x>0;x--)
+  25   1                for(y=t;y>0;y--);
+  26   1      }
+  27          
+  28          //1码，高电平850ns 低电平400ns 误差正负150ns
+  29          void RGB_Write0()
+  30          {
+  31   1              WS2812_IO= 1;                    //经过逻辑分析仪调试的的延时
+  32   1              _nop_(); _nop_(); _nop_(); _nop_(); _nop_(); _nop_(); 
+  33   1              WS2812_IO= 0;
+  34   1      }
+  35          
+  36          //1码，高电平400ns 低电平850ns 误差正负150ns
+  37          void RGB_Write1()
+  38          {
+  39   1              WS2812_IO = 1;                          //经过逻辑分析仪调试的的延时
+  40   1          _nop_(); _nop_(); _nop_(); _nop_(); 
+  41   1          _nop_(); _nop_(); _nop_(); _nop_(); 
+  42   1              _nop_(); _nop_(); _nop_(); _nop_(); 
+  43   1              _nop_(); _nop_(); _nop_(); _nop_(); 
+  44   1              WS2812_IO = 0;
+  45   1      }
+  46          
+  47          
+  48          // 复位   80us低电平
+  49          void RGB_LEDReset()
+  50          {
+  51   1              WS2812_IO = 0;
+  52   1              Delay80us();
+  53   1      }
+  54          
+C51 COMPILER V9.60.7.0   WS2812                                                            01/27/2023 00:08:37 PAGE 2   
+
+  55          
+  56          //发送24位数据
+  57          void Send_2811_24bits(unsigned char G8,unsigned char R8,unsigned char B8)
+  58          {
+  59   1                
+  60   1              unsigned int n = 0;
+  61   1              //发送G8位
+  62   1              for(n=0;n<8;n++)
+  63   1              {
+  64   2                      G8<<=n;
+  65   2                      if(G8&0x80 == 0x80)
+  66   2                      {
+  67   3                              RGB_Write1();
+  68   3                      }
+  69   2                      else  
+  70   2                      {
+  71   3                              RGB_Write0();
+  72   3                      }
+  73   2              }
+  74   1              //发送R8位
+  75   1              for(n=0;n<8;n++)
+  76   1              {
+  77   2                      R8<<=n;
+  78   2                      if(R8&0x80 == 0x80)
+  79   2                      {
+  80   3                              RGB_Write1();
+  81   3                      }
+  82   2                      else  
+  83   2                      {
+  84   3                              RGB_Write0();
+  85   3                      }
+  86   2                      
+  87   2              }
+  88   1              //发送B8位
+  89   1              for(n=0;n<8;n++)
+  90   1              {
+  91   2                      B8<<=n;
+  92   2                      if(B8&0x80 == 0x80)
+  93   2                      {
+  94   3                              RGB_Write1();
+  95   3                      }
+  96   2                      else  
+  97   2                      {
+  98   3                              RGB_Write0();
+  99   3                      }
+ 100   2              }
+ 101   1      }
+ 102          
+ 103          // RGB写一个字节
+ 104          void RGB_WriteByte(unsigned char dat)
+ 105          {
+ 106   1        unsigned char xdata i;
+ 107   1              for(i= 0;i<8;i++)
+ 108   1              {
+ 109   2                      dat <<= i;
+ 110   2                if(dat & 0x80) // 判断最高位
+ 111   2                      {
+ 112   3                         RGB_Write1(); // 写1
+ 113   3                      }
+ 114   2                      else
+ 115   2                      {
+ 116   3                         RGB_Write0(); // 写0
+C51 COMPILER V9.60.7.0   WS2812                                                            01/27/2023 00:08:37 PAGE 3   
+
+ 117   3                      }
+ 118   2              }
+ 119   1      }
+ 120          
+ 121          // 设置一个灯的颜色
+ 122          void RGB_ColorSet(unsigned char red,unsigned char green,unsigned char blue)
+ 123          {
+ 124   1              // 灯的实际写入颜色是GRB
+ 125   1              RGB_WriteByte(green);  // 写入绿色
+ 126   1              RGB_WriteByte(red); // 写入红色
+ 127   1              RGB_WriteByte(blue); // 写入蓝色
+ 128   1      }
+ 129          
+ 130          //把24位数据GRB码转RGB
+ 131          void Set_Colour(unsigned char r,unsigned char g,unsigned char b)
+ 132          {
+ 133   1              unsigned char i;
+ 134   1              for(i=0;i<numLEDs;i++)
+ 135   1              {
+ 136   2                      buf_R[i] = r; //缓冲
+ 137   2                      buf_G[i] = g;
+ 138   2                      buf_B[i] = b;
+ 139   2              }
+ 140   1              for(i=0;i<numLEDs;i++)
+ 141   1              {
+ 142   2                      Send_2811_24bits(buf_G[i],buf_R[i],buf_B[i]);//发送显示
+ 143   2              }
+ 144   1      }
+ 145          
+ 146          
+ 147          //某一个点显示的颜色
+ 148          void SetPointColour(unsigned int num,unsigned char r,unsigned char g,unsigned char b)
+ 149          {
+ 150   1                unsigned char i;
+ 151   1                      for(i=0;i<numLEDs;i++)
+ 152   1                {
+ 153   2                                      buf_R[num] = r;//缓冲
+ 154   2                                buf_G[num] = g;
+ 155   2                                buf_B[num] = b;
+ 156   2                      }
+ 157   1                      for(i=0;i<numLEDs;i++)
+ 158   1                      {
+ 159   2                              Send_2811_24bits(buf_G[i],buf_R[i],buf_B[i]);//发送显示
+ 160   2                      }
+ 161   1      }
+ 162           
+ 163          //颜色交换24位不拆分发
+ 164          void SetPixelColor(unsigned char num,unsigned long c)
+ 165          {
+ 166   1                unsigned char i;
+ 167   1                      for(i=0;i<numLEDs;i++)
+ 168   1                {
+ 169   2                                      buf_R[num] = (unsigned char)(c>>16);
+ 170   2                                buf_G[num] = (unsigned char)(c>>8);
+ 171   2                                buf_B[num] = (unsigned char)(c);
+ 172   2                      }
+ 173   1                      for(i=0;i<numLEDs;i++)
+ 174   1                      {
+ 175   2                              Send_2811_24bits(buf_G[i],buf_R[i],buf_B[i]);
+ 176   2                      }
+ 177   1      }
+ 178          
+C51 COMPILER V9.60.7.0   WS2812                                                            01/27/2023 00:08:37 PAGE 4   
+
+ 179          //复位
+ 180          void PixelUpdate()
+ 181          {
+ 182   1              RGB_LEDReset();
+ 183   1      }
+ 184          //颜色
+ 185          unsigned long Color(unsigned char r, unsigned char g, unsigned char b)
+ 186          {
+ 187   1              return ((unsigned long)r << 16) | ((unsigned long)g <<  8) | b;
+ 188   1      }
+ 189           
+ 190          //颜色算法
+ 191          unsigned long Wheel(unsigned char WheelPos)
+ 192          {
+ 193   1              WheelPos = 255 - WheelPos;
+ 194   1              if(WheelPos < 85) 
+ 195   1              {
+ 196   2                      return Color(255 - WheelPos * 3, 0, WheelPos * 3);
+ 197   2              }
+ 198   1              if(WheelPos < 170) 
+ 199   1              {
+ 200   2      
+ 201   2                      WheelPos -= 85;
+ 202   2                      return Color(0, WheelPos * 3, 255 - WheelPos * 3);
+ 203   2              }
+ 204   1              WheelPos -= 170;
+ 205   1              return Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+ 206   1      }
+ 207           
+ 208          //彩虹
+ 209          void rainbow(unsigned int wait)
+ 210          {
+ 211   1              unsigned int i, j;
+ 212   1       
+ 213   1              for(j=0; j<256; j++) 
+ 214   1              {
+ 215   2                      for(i=0; i<numLEDs; i++)
+ 216   2                      {
+ 217   3                              SetPixelColor(i, Wheel((i+j) & 255));
+ 218   3                      }
+ 219   2                      PixelUpdate();
+ 220   2                      HAL_Delay(wait);
+ 221   2              }
+ 222   1      }
+ 223           
+ 224          //稍微不同的是，这使得彩虹均匀分布
+ 225          void rainbowCycle(unsigned int wait) 
+ 226          {
+ 227   1              unsigned int i, j;
+ 228   1       
+ 229   1              for(j=0;j<256*5;j++)    //   车轮上所有颜色的5个循环    
+ 230   1              { 
+ 231   2                      for(i=0;i<numLEDs;i++) 
+ 232   2                      {
+ 233   3                              SetPixelColor(i, Wheel(((i * 256 / numLEDs) + j) & 255));
+ 234   3                      }
+ 235   2                PixelUpdate();
+ 236   2                      HAL_Delay (wait);
+ 237   2              }
+ 238   1      }
+ 239           
+ 240          //呼吸灯
+C51 COMPILER V9.60.7.0   WS2812                                                            01/27/2023 00:08:37 PAGE 5   
+
+ 241          void theaterChase(unsigned long c, unsigned int wait) 
+ 242          {
+ 243   1              int j,q;
+ 244   1              unsigned int i;
+ 245   1              for (j=0; j<255*5; j++)                         // 做10个循环
+ 246   1              {  
+ 247   2                      for (q=0; q < 3; q++) 
+ 248   2                      {
+ 249   3                      for (i=0; i<numLEDs; i=i+3)
+ 250   3                      {
+ 251   4                              SetPixelColor(i+q, c);    // 把每一个第三个像素
+ 252   4                      }
+ 253   3                      PixelUpdate();
+ 254   3                      HAL_Delay(wait);
+ 255   3       
+ 256   3                      for (i=0; i<numLEDs; i=i+3) 
+ 257   3                      {
+ 258   4                              SetPixelColor(i+q, 0);        //t  把每一个第三个像素关掉
+ 259   4                      }
+ 260   3                      PixelUpdate();
+ 261   3                      }
+ 262   2              }
+ 263   1      }
+ 264           
+ 265          //带有彩虹效果的戏剧式爬行灯
+ 266          void theaterChaseRainbow(unsigned int wait) 
+ 267          {
+ 268   1              int j,q;
+ 269   1              unsigned int i;
+ 270   1              for (j=0; j < 256; j++)          //  在轮子上循环所有256色
+ 271   1              {     
+ 272   2                      for (q=0; q < 3; q++)
+ 273   2                      {
+ 274   3                              for (i=0; i < numLEDs; i=i+3) 
+ 275   3                              {
+ 276   4                                      SetPixelColor(i+q, Wheel( (i+j) % 255));    //把每一个第三个像素
+ 277   4                              }
+ 278   3                      PixelUpdate();
+ 279   3       
+ 280   3                      HAL_Delay(wait);
+ 281   3       
+ 282   3                      for (i=0; i < numLEDs; i=i+3)
+ 283   3                      {
+ 284   4                              SetPixelColor(i+q, 0);        //把每一个第三个像素关掉
+ 285   4                      }
+ 286   3                      }
+ 287   2              }
+ 288   1      }
+ 289           
+ 290          //用一种颜色填充这些圆点
+ 291          void colorWipe(unsigned long c, unsigned int wait) 
+ 292          {
+ 293   1              unsigned int j,i=0;
+ 294   1      //      for( i=0; i<numLEDs; i++) 
+ 295   1      //      {
+ 296   1      //              SetPixelColor(i, c);
+ 297   1      //              PixelUpdate();
+ 298   1      //              HAL_Delay(wait);
+ 299   1      //      }
+ 300   1              for(j=0; j<44*10; j++)
+ 301   1              {
+ 302   2                      for( i=0; i<numLEDs; i++) 
+C51 COMPILER V9.60.7.0   WS2812                                                            01/27/2023 00:08:37 PAGE 6   
+
+ 303   2                      {
+ 304   3                              HAL_Delay(1000);
+ 305   3                              SetPixelColor(i,Wheel(c%255));
+ 306   3                              PixelUpdate();
+ 307   3                              HAL_Delay(wait);
+ 308   3                              SetPixelColor(i,Wheel(200));
+ 309   3                              PixelUpdate();
+ 310   3                              HAL_Delay(wait);
+ 311   3                      }
+ 312   2              }
+ 313   1      }
+ 314           
+ 315          /* numLEDs个灯各自产生随机的颜色*/
+ 316          void RGB_RandomColor()
+ 317          {
+ 318   1              unsigned char xdata red,green,blue; 
+ 319   1              unsigned int i=0;
+ 320   1              // srand((int)time(0)); // 设置随机种子
+ 321   1              red = rand() % 255; //产生随机数在一个字节的范围内
+ 322   1              green = rand() % 255;
+ 323   1              blue = rand() % 255;
+ 324   1              for(i=0;i<numLEDs;i++)
+ 325   1              {
+ 326   2                      RGB_ColorSet(red,green,blue);
+ 327   2              }
+ 328   1      }
+ 329          
+ 330          void RGB_SetColor(unsigned char C)
+ 331          {
+ 332   1              unsigned int i=0;
+ 333   1              switch(C)
+ 334   1              {
+ 335   2                      case 1:
+ 336   2                              for(i=0; i<numLEDs; i++){
+ 337   3                                      RGB_ColorSet(255,0,0);
+ 338   3                              }break;
+ 339   2                      case 2:
+ 340   2                              for(i=0; i<numLEDs; i++){
+ 341   3                                      RGB_ColorSet(0,255,0);
+ 342   3                              }break; 
+ 343   2                      case 3:
+ 344   2                              for(i=0; i<numLEDs; i++){
+ 345   3                                      RGB_ColorSet(0,0,255);
+ 346   3                              }break; 
+ 347   2                      case 4:
+ 348   2                              for(i=0; i<numLEDs; i++){
+ 349   3                                      RGB_ColorSet(0,0,0);
+ 350   3                              }break;         
+ 351   2                      case 5:
+ 352   2                              for(i=0; i<numLEDs; i++){
+ 353   3                                      RGB_ColorSet(240,240,240);
+ 354   3                              }break; 
+ 355   2                      case 6:
+ 356   2                              for(i=0; i<numLEDs; i++){
+ 357   3                                      RGB_ColorSet(125,38,205);
+ 358   3                              }break; 
+ 359   2                      case 7:
+ 360   2                              for(i=0; i<numLEDs; i++){
+ 361   3                                      RGB_ColorSet(85,26,139);
+ 362   3                              }break; 
+ 363   2                      case 8:
+ 364   2                      for(i=0; i<numLEDs; i++){
+C51 COMPILER V9.60.7.0   WS2812                                                            01/27/2023 00:08:37 PAGE 7   
+
+ 365   3                              RGB_ColorSet(191,62,255);
+ 366   3                              }break; 
+ 367   2                      case 9:
+ 368   2                              for(i=0; i<numLEDs; i++){
+ 369   3                                      RGB_ColorSet(255,210,255);
+ 370   3                              }break; 
+ 371   2                      case 10:
+ 372   2                              for(i=0; i<numLEDs; i++){
+ 373   3                                      RGB_ColorSet(0,0,139);
+ 374   3                              }break; 
+ 375   2                      case 11:
+ 376   2                              for(i=0; i<numLEDs; i++){
+ 377   3                                      RGB_ColorSet(255,69,0);
+ 378   3                              }break; 
+ 379   2                      case 12:
+ 380   2                              for(i=0; i<numLEDs; i++){
+ 381   3                                      RGB_ColorSet(255,64,64);
+ 382   3                              }break; 
+ 383   2                      case 13:
+ 384   2                      for(i=0; i<numLEDs; i++){
+ 385   3                              RGB_ColorSet(238,118,33);
+ 386   3                              }break; 
+ 387   2                      case 14:
+ 388   2                              for(i=0; i<numLEDs; i++){
+ 389   3                                      RGB_ColorSet(255,211,155);
+ 390   3                              }break; 
+ 391   2                      case 15:
+ 392   2                              for(i=0; i<numLEDs; i++){
+ 393   3                                      RGB_ColorSet(139,117,0);
+ 394   3                              }break; 
+ 395   2                      case 16:
+ 396   2                              for(i=0; i<numLEDs; i++){
+ 397   3                                      RGB_ColorSet(69,139,116);
+ 398   3                              }break; 
+ 399   2              }
+ 400   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2453    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    132      61
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

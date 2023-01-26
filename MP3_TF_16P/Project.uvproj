@@ -396,6 +396,16 @@
               <FileType>5</FileType>
               <FilePath>.\HardWare\MP3_TF_16P.h</FilePath>
             </File>
+            <File>
+              <FileName>LD3320.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HardWare\LD3320.c</FilePath>
+            </File>
+            <File>
+              <FileName>LD3320.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\HardWare\LD3320.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

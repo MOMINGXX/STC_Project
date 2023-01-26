@@ -3,7 +3,7 @@
 
 #include <STC12C5A60S2.H>
 
-#define SYS_CLK 11059200L
+//#define SYS_CLK 11059200L
 
 #if !defined(SYS_CLK)
 #define SYS_CLK 24000000L
