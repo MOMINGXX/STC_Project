@@ -1,0 +1,166 @@
+C51 COMPILER V9.60.7.0   DS18B20                                                           02/01/2023 18:01:59 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN .\Objects\DS18B20.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE HardWare\DS18B20.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\HardWare;.\User
+                    -;.\Library;.\Library) DEBUG OBJECTEXTEND PRINT(.\Listings\DS18B20.lst) OBJECT(.\Objects\DS18B20.obj)
+
+line level    source
+
+   1          #include "DS18B20.h"
+   2          
+   3          /****
+   4                  * @brief        DS18B20 延时550us                         
+   5                  * @param        无
+   6                  * @return   无          
+   7                  * Sample usage:DS18B20_Delay550us();
+   8              */
+   9          void DS18B20_Delay550us()               //@24.000MHz
+  10          {
+  11   1              unsigned char i, j;
+  12   1      
+  13   1              _nop_();
+  14   1              _nop_();
+  15   1              i = 13;
+  16   1              j = 211;
+  17   1              do
+  18   1              {
+  19   2                      while (--j);
+  20   2              } while (--i);
+  21   1      }
+  22          
+  23          /****
+  24                  * @brief        DS18B20 初始化                            
+  25                  * @param        无
+  26                  * @return   无          
+  27                  * Sample usage:DS18B20_Init();
+  28              */
+  29          void DS18B20_Init()
+  30          {
+  31   1          DS18B20_PIN = 1;
+  32   1          DS18B20_PIN = 0;
+  33   1          DS18B20_Delay550us();
+  34   1          DS18B20_PIN = 1;
+  35   1              DS18B20_Delay550us();
+  36   1      }
+  37          
+  38          /****
+  39                  * @brief        DS18B20 写一位数据                        
+  40                  * @param        Bit             要写的一位数据          
+  41                  * @return   无          
+  42                  * Sample usage:DS18B20_WriteBit(0x01);
+  43              */
+  44          void DS18B20_WriteBit(uint8_t Bit)
+  45          {
+  46   1              DS18B20_PIN = 0;
+  47   1              Delay10us();
+  48   1              DS18B20_PIN = Bit;
+  49   1              Delay50us();
+  50   1          DS18B20_PIN = 1;
+  51   1      }
+  52          
+  53          /****
+  54                  * @brief        DS18B20 写一个字节数据                            
+C51 COMPILER V9.60.7.0   DS18B20                                                           02/01/2023 18:01:59 PAGE 2   
+
+  55                  * @param        Bit             要写的字节数据          
+  56                  * @return   无          
+  57                  * Sample usage:DS18B20_WriteByte( Byte);
+  58              */
+  59          void DS18B20_WriteByte(uint8_t Byte)
+  60          {
+  61   1              uint8_t i;
+  62   1              for(i=0;i<8;i++)
+  63   1              {
+  64   2                      DS18B20_WriteBit(Byte&(0x01<<i));
+  65   2              }
+  66   1      }
+  67          
+  68          /****
+  69                  * @brief        DS18B20 读一位数据                        
+  70                  * @param        无                      
+  71                  * @return   Bit         读到的数据
+  72                  * Sample usage:DS18B20_ReadBit();
+  73              */
+  74          uint8_t DS18B20_ReadBit()
+  75          {
+  76   1              uint8_t Bit;
+  77   1              DS18B20_PIN = 0;
+  78   1              Delay5us();
+  79   1              DS18B20_PIN = 1;
+  80   1              Delay5us();
+  81   1              Bit = DS18B20_PIN;
+  82   1              Delay50us();
+  83   1              return Bit;     
+  84   1      }
+  85          
+  86          /****
+  87                  * @brief        DS18B20 读一字节数据                              
+  88                  * @param        无                      
+  89                  * @return   Byte        读到的字节数据
+  90                  * Sample usage:DS18B20_ReadBit();
+  91              */
+  92          uint8_t DS18B20_ReadByte()
+  93          {
+  94   1              uint8_t i;
+  95   1              uint8_t Byte=0x00;
+  96   1              for(i=0;i<8;i++)
+  97   1              {
+  98   2                      if(DS18B20_ReadBit())
+  99   2                      {
+ 100   3                              Byte|=(0x01<<i);
+ 101   3                      }
+ 102   2              }
+ 103   1              return Byte;
+ 104   1      }
+ 105          
+ 106          /****
+ 107                  * @brief        DS18B20 温度转换                          
+ 108                  * @param        无                      
+ 109                  * @return   无
+ 110                  * Sample usage:DS18B20_ConvertT();
+ 111              */
+ 112          void DS18B20_ConvertT()
+ 113          {
+ 114   1              DS18B20_Init();
+ 115   1              DS18B20_WriteByte(DS18B20_SKIP_ROM);
+ 116   1              DS18B20_WriteByte(DS18B20_CONVERT_T);
+C51 COMPILER V9.60.7.0   DS18B20                                                           02/01/2023 18:01:59 PAGE 3   
+
+ 117   1      }
+ 118          
+ 119          /****
+ 120                  * @brief        DS18B20 读取温度数据                      
+ 121                  * @param        无                      
+ 122                  * @return   T   读到的温度数据
+ 123                  * Sample usage:DS18B20_ReadT();
+ 124              */
+ 125          float DS18B20_ReadT()
+ 126          {
+ 127   1              uint8_t TLSB,TMSB;
+ 128   1              int Temp;
+ 129   1              float T;
+ 130   1              DS18B20_Init();
+ 131   1              DS18B20_WriteByte(DS18B20_SKIP_ROM);
+ 132   1              DS18B20_WriteByte(DS18B20_READ_SCRATCHPAD);
+ 133   1              TLSB=DS18B20_ReadByte();
+ 134   1              TMSB=DS18B20_ReadByte();
+ 135   1              Temp=(TMSB<<8)|TLSB;
+ 136   1              T=Temp/16.0;
+ 137   1              return T;
+ 138   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    242    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       7
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

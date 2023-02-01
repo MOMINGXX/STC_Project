@@ -1,0 +1,211 @@
+C51 COMPILER V9.60.7.0   EEPROM                                                            02/01/2023 18:01:59 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE EEPROM
+OBJECT MODULE PLACED IN .\Objects\EEPROM.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE HardWare\EEPROM.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\HardWare;.\User;
+                    -.\Library;.\Library) DEBUG OBJECTEXTEND PRINT(.\Listings\EEPROM.lst) OBJECT(.\Objects\EEPROM.obj)
+
+line level    source
+
+   1          #include "EEPROM.h"
+   2          
+   3          /****
+   4                  * @brief        AT24C02写入一字节数据                             
+   5                  * @param        Write_Addr  AT24C02内部存储单元地址
+   6              * @param    Byte            要写入的数据
+   7                  * @return   无          
+   8                  * Sample usage:AT24C02_Byte_Write(1,0x04);
+   9              */
+  10          void AT24C02_Byte_Write(uint8_t Write_Addr,uint8_t Byte)
+  11          {
+  12   1              I2C_Start();
+  13   1              I2C_Write_Byte(AT24C02_ADDR);
+  14   1              I2C_Receive_Ack();
+  15   1              I2C_Write_Byte(Write_Addr);
+  16   1              I2C_Receive_Ack();
+  17   1              I2C_Write_Byte(Byte);
+  18   1              I2C_Receive_Ack();
+  19   1              I2C_Stop();
+  20   1              Delay(5);
+  21   1      }
+  22          
+  23          /****
+  24                  * @brief        AT24C02写入一页数据                       
+  25                  * @param        Write_Addr    AT24C02内部存储单元地址
+  26              * @param    Byte    要写入的数据的地址
+  27              * @param    Num     要写入的个数  0-8
+  28                  * @return   无          
+  29                  * Sample usage:AT24C02_Page_Write(1,arr,8);
+  30              */
+  31          void AT24C02_Page_Write(uint8_t Write_Addr,uint8_t *Byte,uint8_t Num)
+  32          {
+  33   1              I2C_Start();
+  34   1              I2C_Write_Byte(AT24C02_ADDR);
+  35   1              I2C_Receive_Ack();
+  36   1              I2C_Write_Byte(Write_Addr);
+  37   1              I2C_Receive_Ack();
+  38   1              while(Num--)
+  39   1              {
+  40   2                      I2C_Write_Byte(*Byte++);
+  41   2                      I2C_Receive_Ack();
+  42   2              }
+  43   1              I2C_Stop();
+  44   1              Delay(5);
+  45   1      }
+  46          
+  47          /****
+  48                  * @brief        AT24C02写入数据                           
+  49                  * @param        Addr    AT24C02内部存储单元地址
+  50              * @param    Byte    要写入的数据的地址
+  51              * @param    Num     要写入的个数  0-255
+  52                  * @return   无          
+  53                  * Sample usage:AT24C02_Buffer_Write(1,arr,8);
+  54              */
+C51 COMPILER V9.60.7.0   EEPROM                                                            02/01/2023 18:01:59 PAGE 2   
+
+  55          void AT24C02_Buffer_Write(uint8_t Write_Addr,uint8_t *Byte,uint8_t Num)
+  56          {
+  57   1          uint8_t NumOfPage = 0, NumOfSingle = 0, Addr_Temp = 0, count = 0;
+  58   1      
+  59   1          Addr_Temp = Write_Addr % AT24C02_PageSize;
+  60   1          count = AT24C02_PageSize - Addr_Temp;
+  61   1          NumOfPage =  Num / AT24C02_PageSize;
+  62   1          NumOfSingle = Num % AT24C02_PageSize;
+  63   1          
+  64   1          /* If Write_Addr is AT24C02_PageSize aligned  */
+  65   1          if(Addr_Temp == 0) 
+  66   1          {
+  67   2              /* If Num < AT24C02_PageSize */
+  68   2              if(NumOfPage == 0) 
+  69   2              {
+  70   3                  AT24C02_Page_Write(Write_Addr, Byte, NumOfSingle);
+  71   3              }
+  72   2              /* If Num > AT24C02_PageSize */
+  73   2              else  
+  74   2              {
+  75   3                  while(NumOfPage--)
+  76   3                  {
+  77   4                      AT24C02_Page_Write(Write_Addr, Byte, AT24C02_PageSize); 
+  78   4                      Write_Addr +=  AT24C02_PageSize;
+  79   4                      Byte += AT24C02_PageSize;
+  80   4                  }
+  81   3      
+  82   3                  if(NumOfSingle!=0)
+  83   3                  {
+  84   4                      AT24C02_Page_Write(Write_Addr, Byte, NumOfSingle);
+  85   4                  }
+  86   3              }
+  87   2          }
+  88   1          /* If Write_Addr is not AT24C02_PageSize aligned  */
+  89   1          else 
+  90   1          {
+  91   2              /* If Num < AT24C02_PageSize */
+  92   2              if(NumOfPage== 0) 
+  93   2              {
+  94   3                  AT24C02_Page_Write(Write_Addr, Byte, NumOfSingle);
+  95   3              }
+  96   2              /* If Num > AT24C02_PageSize */
+  97   2              else
+  98   2              {
+  99   3                  Num -= count;
+ 100   3                  NumOfPage =  Num / AT24C02_PageSize;
+ 101   3                  NumOfSingle = Num % AT24C02_PageSize;       
+ 102   3                  
+ 103   3                  if(count != 0)
+ 104   3                  {  
+ 105   4                      AT24C02_Page_Write(Write_Addr, Byte, count);
+ 106   4                      Write_Addr += count;
+ 107   4                      Byte += count;
+ 108   4                  } 
+ 109   3                  
+ 110   3                  while(NumOfPage--)
+ 111   3                  {
+ 112   4                      AT24C02_Page_Write(Write_Addr, Byte, AT24C02_PageSize);
+ 113   4                      Write_Addr +=  AT24C02_PageSize;
+ 114   4                      Byte += AT24C02_PageSize;  
+ 115   4                  }
+ 116   3                  if(NumOfSingle != 0)
+C51 COMPILER V9.60.7.0   EEPROM                                                            02/01/2023 18:01:59 PAGE 3   
+
+ 117   3                  {
+ 118   4                      AT24C02_Page_Write(Write_Addr, Byte, NumOfSingle); 
+ 119   4                  }
+ 120   3              }
+ 121   2          }  
+ 122   1      }
+ 123          
+ 124          /****
+ 125                  * @brief        AT24C02读取数据                           
+ 126                  * @param        Write_Addr    AT24C02内部存储单元地址
+ 127                  * @return   Byte        读取的数据
+ 128                  * Sample usage:AT24C02_Random_Read(1);
+ 129              */
+ 130          uint8_t AT24C02_Random_Read(uint8_t Write_Addr)
+ 131          {
+ 132   1              uint8_t Byte = 0;
+ 133   1              I2C_Start();
+ 134   1              I2C_Write_Byte(AT24C02_ADDR);
+ 135   1              I2C_Receive_Ack();
+ 136   1              I2C_Write_Byte(Write_Addr);
+ 137   1              I2C_Receive_Ack();
+ 138   1              
+ 139   1              I2C_Start();
+ 140   1              I2C_Write_Byte(AT24C02_ADDR | 0x01);
+ 141   1              I2C_Receive_Ack();
+ 142   1              Byte = I2C_Receive_Byte();
+ 143   1              I2C_Send_Ack(1);
+ 144   1              I2C_Stop();
+ 145   1              return Byte;
+ 146   1      }
+ 147          
+ 148          /****
+ 149                  * @brief        AT24C02连续读取数据                       
+ 150                  * @param        Write_Addr    AT24C02内部存储单元地址
+ 151                  * @return   Byte        读取的数据
+ 152              * @param    Num     要写入的个数  0-255
+ 153                  * Sample usage:AT24C02_Sequential_Read(1,arr,8);
+ 154              */
+ 155          void AT24C02_Sequential_Read(uint8_t Write_Addr,uint8_t *Byte,uint8_t Num)
+ 156          {
+ 157   1              uint16_t i = 0;
+ 158   1              I2C_Start();
+ 159   1              I2C_Write_Byte(AT24C02_ADDR);
+ 160   1              I2C_Receive_Ack();
+ 161   1              I2C_Write_Byte(Write_Addr);
+ 162   1              I2C_Receive_Ack();
+ 163   1              
+ 164   1              I2C_Start();
+ 165   1              I2C_Write_Byte(AT24C02_ADDR | 0x01);
+ 166   1              I2C_Receive_Ack();
+ 167   1              for (i = 0; i <= Num; i++)
+ 168   1          {
+ 169   2                      *Byte++ = I2C_Receive_Byte();
+ 170   2                      if(Num == i)
+ 171   2                      {
+ 172   3                              I2C_Send_Ack(1);
+ 173   3                      }
+ 174   2                      else
+ 175   2                      {
+ 176   3                              I2C_Send_Ack(0);
+ 177   3                      }
+ 178   2              }
+C51 COMPILER V9.60.7.0   EEPROM                                                            02/01/2023 18:01:59 PAGE 4   
+
+ 179   1              I2C_Stop();
+ 180   1      }
+ 181          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    638    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      24
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

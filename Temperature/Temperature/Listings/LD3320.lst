@@ -1,0 +1,71 @@
+C51 COMPILER V9.60.7.0   LD3320                                                            01/26/2023 23:34:12 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LD3320
+OBJECT MODULE PLACED IN .\Objects\LD3320.obj
+COMPILER INVOKED BY: E:\Keil5\C51\BIN\C51.EXE HardWare\LD3320.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\HardWare;.\User;
+                    -.\Library;.\Library) DEBUG OBJECTEXTEND PRINT(.\Listings\LD3320.lst) OBJECT(.\Objects\LD3320.obj)
+
+line level    source
+
+   1          #include "LD3320.h"
+   2          
+   3          void MP3_Play()
+   4          {
+   5   1          if(1 == Flag1)
+   6   1          {
+   7   2              if(NULL != strstr(RX1_DAT,MP3_PLAY_MUSIC))
+   8   2              {
+   9   3                  Uart_SendCMD(Specify_Music,0x00,36);
+  10   3              }
+  11   2              else if(NULL != strstr(RX1_DAT,MP3_STOP_MUSIC))
+  12   2              {
+  13   3                  Uart_SendCMD(Stop_Song,0x00,0);
+  14   3              }
+  15   2              else if(NULL != strstr(RX1_DAT,MP3_PLAYON_MUSIC))
+  16   2              {
+  17   3                  Uart_SendCMD(Play,0x00,0);
+  18   3              }
+  19   2              else if(NULL != strstr(RX1_DAT,MP3_SUSPEND_MUSIC))
+  20   2              {
+  21   3                  Uart_SendCMD(Suspended,0x00,0);
+  22   3              }
+  23   2              else if(NULL != strstr(RX1_DAT,MP3_NEXT_SONG))
+  24   2              {
+  25   3                  Uart_SendCMD(Next_Song,0x00,36);
+  26   3              }
+  27   2              else if(NULL != strstr(RX1_DAT,MP3_LAST_SONG))
+  28   2              {
+  29   3                  Uart_SendCMD(Last_Song,0x00,36);
+  30   3              }
+  31   2              else if(NULL != strstr(RX1_DAT,MP3_ADD_VOLUME))
+  32   2              {
+  33   3                  Uart_SendCMD(Add_Volume,0x00,1);
+  34   3              }
+  35   2              else if(NULL != strstr(RX1_DAT,MP3_REDUCE_VOLUME))
+  36   2              {
+  37   3                  Uart_SendCMD(Reduce_Volume,0x00,1);
+  38   3              }
+  39   2              else if(NULL != strstr(RX1_DAT,MP3_RANDOM_PLAY_MUSIC))
+  40   2              {
+  41   3                  Uart_SendCMD(Random_Broadcast,0x00,0);
+  42   3              }
+  43   2              Flag1 = 0;
+  44   2          }
+  45   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    349    ----
+   CONSTANT SIZE    =     92    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.7.0   LD3320                                                            01/26/2023 23:34:12 PAGE 2   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
