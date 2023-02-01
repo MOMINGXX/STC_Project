@@ -177,7 +177,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2></Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -381,6 +381,16 @@
               <FileType>1</FileType>
               <FilePath>.\User\main.c</FilePath>
             </File>
+            <File>
+              <FileName>Deal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Deal.c</FilePath>
+            </File>
+            <File>
+              <FileName>Deal.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\Deal.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -412,14 +422,24 @@
               <FilePath>.\HardWare\oled.c</FilePath>
             </File>
             <File>
-              <FileName>oled.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\HardWare\oled.h</FilePath>
+              <FileName>EEPROM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HardWare\EEPROM.c</FilePath>
             </File>
             <File>
-              <FileName>oledfont.h</FileName>
+              <FileName>EEPROM.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\HardWare\oledfont.h</FilePath>
+              <FilePath>.\HardWare\EEPROM.h</FilePath>
+            </File>
+            <File>
+              <FileName>I2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HardWare\I2C.c</FilePath>
+            </File>
+            <File>
+              <FileName>I2C.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\HardWare\I2C.h</FilePath>
             </File>
           </Files>
         </Group>

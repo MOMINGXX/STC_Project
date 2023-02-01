@@ -11,8 +11,8 @@
 #define OLED_MODE 0
 
 
-sbit OLED_SCL=P2^6;     //时钟 D0(SCLK)
-sbit OLED_SDIN=P2^7;    //D1（MOSI） 数据
+sbit OLED_SCL=P3^6;     //时钟 D0(SCLK)
+sbit OLED_SDIN=P3^7;    //D1（MOSI） 数据
  
 
 #define OLED_CS_Clr()  OLED_CS=0

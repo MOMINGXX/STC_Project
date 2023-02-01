@@ -123,25 +123,28 @@ uint8_t DHT11_Read_Byte()
 	* @brief	DHT11 读取温湿度数据   			  
 	* @param   	Data    存储读取的温湿度数据 
 	* @return   0 / 1   0>读取的数据错误         1    	
-	* Sample usage:DHT11_Read_Data(Data)
+	* Sample usage:DHT11_Read_Data(&TempH,&TempL,&HumiH,&HumiL);
     */
-uint8_t DHT11_Read_Data(uint8_t *Data)
+void DHT11_Read_Data(uint8_t *TempH,uint8_t *TempL,uint8_t *HumiH,uint8_t *HumiL)
 {
 	uint8_t i;
+	uint8_t Buff[5];
 	DHT11_Init();
 	if(DHT11_PIN == 0)
 	{
 		while(DHT11_PIN == 0);    //等待拉高 
-		DHT11_Delay80us();		
+		//DHT11_Delay80us();		
 		for(i=0;i<5;i++)
 		{
-			*Data++ = DHT11_Read_Byte();
+			Buff[i] = DHT11_Read_Byte();
 		}
-		i = 147;while (--i);
-		if(Data[4] == Data[0] + Data[1] + Data[2] + Data[3])
+		//i = 147;while (--i);
+		if(Buff[4] == Buff[0] + Buff[1] + Buff[2] + Buff[3])
 		{
-			return 1;
+			*HumiH = Buff[0];
+			*HumiL = Buff[1];
+			*TempH = Buff[2];
+			*TempL = Buff[3];
 		}
 	}
-    return 0;
 }

@@ -15,7 +15,7 @@ bit Flag2 = 0;				//标志位
 
 /****
 	@brief      串口初始化
-	@param   	Uart_n			串口号  USART_1,USART_2
+	@param   	Uart_n			串口号  UART_1,UART_2
 	@param		GPIORX_Pin		接收I/O口	P30 P12 P42
 	@param		GPIOTX_Pin		发送I/O口	P31 P13 P43
 	@param		baud			波特率	115200 57600 9600 4800 2400
@@ -116,7 +116,7 @@ void Uart_Init(UART_NAME Uart_n,GPIO_PIN GPIORX_Pin,GPIO_PIN GPIOTX_Pin,uint16_t
 
 /****
 	@brief      串口发送一个字节
-	@param   	uart_n          串口号  USART_1,USART_2
+	@param   	uart_n          串口号  UART_1,UART_2
 	@param     Byte  			要发送的字节    
 	@return     无
 	Sample usage:    Uart_SendByte(UART_1,'p');  
@@ -144,7 +144,7 @@ void Uart_SendByte(UART_NAME Uart_n,uint8_t Byte)
 
 /****
 	@brief      串口发送一个字符串 
-	@param   	uart_n          串口号  USART_1,USART_2
+	@param   	uart_n          串口号  UART_1,UART_2
 	@param   	String			要发送的字符串 
 	@return     无        	
 	Sample usage:     Uart_SendString(UART_1,"ABCD");    
@@ -159,7 +159,7 @@ void Uart_SendString(UART_NAME Uart_n,uint8_t *String)
 
 /****
 	@brief      串口发送数组
-	@param   	uart_n          串口号  USART_1,USART_2
+	@param   	uart_n          串口号  UART_1,UART_2
 	@param   	Buff			要发送的数组 
 	@param   	Len				数组长度
 	@return     无        	
@@ -171,6 +171,40 @@ void Uart_SendBuff(UART_NAME Uart_n,uint8_t *Buff,uint16_t Len)
 	{
 		Uart_SendByte(Uart_n,*Buff++);
 	}
+}
+
+/****
+	* @brief	平方计算  			  
+    * @param   	X        基值
+    * @param    Y        指数的值
+	* @return   Result   x 的 y 次幂的结果	
+	* Sample usage: Usart_Pow(10,Length);
+    */
+static uint32_t Usart_Pow(uint32_t X, uint32_t Y)
+{
+    //X^Y
+    uint32_t Result = 1;
+    while(Y--)
+    {
+        Result *= X;
+    }
+    return Result;
+}
+
+/****
+	* @brief	串口发送数字  			  
+	* @param   	UARTx  串口号  UART_1,UART_2
+    * @param   	Number  要发送的数字
+    * @param    Length  数字的长度
+	* @return   无  	
+	* Sample usage: Usart_SendNumber(UART_1,12345,5);
+    */
+void Usart_SendNumber(UART_NAME Uart_n,uint32_t Number,uint8_t Length)
+{
+    while(Length--)
+    {
+        Uart_SendByte(Uart_n,Number / Usart_Pow(10,Length) % 10 + '0'); //23 2 3
+    }
 }
 
 /****
@@ -190,7 +224,7 @@ uint8_t putchar(uint8_t c)
 	return c;
 }
 
-#elif (PRINTF_SELECT == 2)
+#else
 uint8_t putchar(uint8_t c)
 {
 	if(c == '\n')
