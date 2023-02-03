@@ -5,7 +5,7 @@
 #include <intrins.h>
 #include "STC12_DELAY.h"
 
-sbit DS18B20_PIN = P2^2;
+sbit DS18B20_PIN = P1^1;
 
 #define DS18B20_CONVERT_T 		0x44
 #define DS18B20_SKIP_ROM 		0xCC

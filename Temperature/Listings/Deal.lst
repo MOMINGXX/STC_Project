@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   DEAL                                                              02/01/2023 18:01:59 PAGE 1   
+C51 COMPILER V9.60.7.0   DEAL                                                              02/03/2023 19:41:32 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE DEAL
@@ -10,83 +10,278 @@ line level    source
 
    1          #include "Deal.h"
    2          
-   3          float T;
-   4          uint8_t TempH,TempL,HumiH,HumiL;
-   5          
-   6          void Deal_Init()
-   7          {
-   8   1          Uart_Init(UART_1,GPIORX_P30,GPIOTX_P31,9600,TIM_BRT);       
-   9   1              
-  10   1              DHT11_Init();
-  11   1      
-  12   1              OLED_Init();
-  13   1              OLED_Clear();
-  14   1              OLED_ShowString(1,0,"Temp Humi Test!",16);
-  15   1      }
-  16          
-  17          void OLED_DS18B20_Temp()
-  18          {
-  19   1              OLED_ShowCHinese(1,2,11);
-  20   1              OLED_ShowCHinese(16,2,12);
-  21   1              OLED_ShowChar(32,3,':',2);      
-  22   1              
-  23   1              OLED_ShowCHinese(108,2,14);
-  24   1              
-  25   1              DS18B20_ConvertT();
-  26   1              T=DS18B20_ReadT();
-  27   1              //printf("\r\nwd:>%f\n",T);
-  28   1              if(T<0)
-  29   1              {
-  30   2                      OLED_ShowChar(74,3,'.',2);
-  31   2                      OLED_ShowChar(43,2,'-',16);
-  32   2                      OLED_ShowNum(49,2,T,3,16);
-  33   2                      OLED_ShowNum(82,2,(uint32_t)(T*10000)%10000,3,16);
+   3          //Alert_Temp[0] 高温报警值      Alert_Temp[1]           低温报警值
+   4          uint8_t Alert_Temp[2];
+   5          char TempH,TempL,HumiH,HumiL;
+   6          float T;
+   7          uint8_t Mode = 0;
+   8          uint8_t KeyNum = 0;
+   9          
+  10          /****
+  11                  * @brief        数据处理 初始化                           
+  12                  * @param        无
+  13                  * @return   无  
+  14                  * Sample usage:Deal_Init();
+  15                  * note: 最低为负值  但存储的是正值 所以会在     OLED_Alert_Temp()
+  16                  *               中处理
+  17              */
+  18          void Deal_Init()
+  19          {
+  20   1          Uart_Init(UART_1,GPIORX_P30,GPIOTX_P31,9600,TIM_BRT);       
+  21   1              Timer0_Init();
+  22   1              DHT11_Init();
+  23   1              OLED_Init();
+  24   1              OLED_Clear();
+  25   1              
+  26   1              //如果阈值非法，则设为默认值
+  27   1              AT24C02_Sequential_Read(0,Alert_Temp,2);
+  28   1              {
+  29   2                      if(Alert_Temp[0] > 125 || Alert_Temp[1] <-55 || Alert_Temp[0] <= Alert_Temp[1])
+  30   2                      {
+  31   3                              Alert_Temp[0] = 30;
+  32   3                              Alert_Temp[1] = 10;
+  33   3                      }
   34   2              }
-  35   1              else OLED_ShowChar(64,3,'.',2);
-  36   1              OLED_ShowNum(39,2,T,3,16);
-  37   1              OLED_ShowNum(72,2,(uint32_t)(T*10000)%10000,4,16);
-  38   1      }
-  39          
-  40          void OLED_DHT11_Temp()
-  41          {
-  42   1              
-  43   1          DHT11_Read_Data(&TempH,&TempL,&HumiH,&HumiL);       
-  44   1              
-  45   1              /*
-  46   1              printf("Tem:%d ℃\r\n", (int)TempH);
-  47   1              printf("Tem:%d ℃\r\n", (int)TempL);
-  48   1          printf("Hum:%d %%H\r\n", (int)HumiH);
-  49   1          printf("Hum:%d %%H\r\n", (int)HumiL);
-  50   1          */
-  51   1              
-  52   1              OLED_ShowChar(47,6,'0'+(TempH/10),16);
-  53   1              OLED_ShowChar(55,6,'0'+(TempH%10),16);
-  54   1              OLED_ShowChar(72,6,'0'+(TempL/10),16);
-C51 COMPILER V9.60.7.0   DEAL                                                              02/01/2023 18:01:59 PAGE 2   
+  35   1      }
+  36          
+  37          /****
+  38                  * @brief        显示DS18B20 测得温度                      
+  39                  * @param        x       OLED 显示行位置  x = 0(黄色) 2 4 6
+  40                  * @return   无  
+  41                  * Sample usage:OLED_DS18B20_Temp(2);
+  42              */
+  43          void OLED_DS18B20_Temp(uint8_t x)
+  44          {
+  45   1              if((x % 2 == 0) && (x <= 6) && (x >= 0))
+  46   1              {
+  47   2                      OLED_ShowCHinese(1,x,11);
+  48   2                      OLED_ShowCHinese(16,x,12);
+  49   2                      OLED_ShowChar(32,x+1,':',2);    
+  50   2                      
+  51   2                      OLED_ShowCHinese(92,x,14);
+  52   2                      
+  53   2                      DS18B20_ConvertT();
+  54   2                      T=DS18B20_ReadT();
+C51 COMPILER V9.60.7.0   DEAL                                                              02/03/2023 19:41:32 PAGE 2   
 
-  55   1              OLED_ShowChar(80,6,'0'+(TempL%10),16);  
-  56   1              OLED_ShowCHinese(1,6,11);
-  57   1              OLED_ShowCHinese(16,6,12);
-  58   1              OLED_ShowChar(32,7,':',2);      
-  59   1              OLED_ShowChar(64,7,'.',2);
-  60   1              OLED_ShowCHinese(92,6,14);
-  61   1              
-  62   1              OLED_ShowChar(47,4,'0'+(HumiH/10),16);
-  63   1              OLED_ShowChar(55,4,'0'+(HumiH%10),16);
-  64   1              OLED_ShowChar(72,4,'0'+(HumiL/10),16);
-  65   1              OLED_ShowChar(80,4,'0'+(HumiL%10),16);
-  66   1              OLED_ShowCHinese(1,4,13);
-  67   1              OLED_ShowCHinese(16,4,12);
-  68   1              OLED_ShowChar(32,5,':',2);      
-  69   1              OLED_ShowChar(64,5,'.',2);
-  70   1              OLED_ShowString(92,4,"%RH",16);
-  71   1      }
+  55   2                      //printf("\r\nwd:>%f\n",T);
+  56   2                      if(T<0)
+  57   2                      {
+  58   3                              OLED_ShowChar(74,x+1,'.',2);
+  59   3                              OLED_ShowChar(43,x,'-',16);
+  60   3                              OLED_ShowNum(49,x,T,3,16);
+  61   3                              OLED_ShowNum(82,x,(uint32_t)(T*10000)%10000,2,16);
+  62   3                      }
+  63   2                      else OLED_ShowChar(64,x+1,'.',2);
+  64   2                      OLED_ShowNum(39,x,T,3,16);
+  65   2                      OLED_ShowNum(72,x,(uint32_t)(T*10000)%10000,2,16);
+  66   2              }
+  67   1              else
+  68   1              {
+  69   2                      OLED_ShowString(1,0,"Wrong Position!",16);
+  70   2              }
+  71   1      
+  72   1      }
+  73          
+  74          /****
+  75                  * @brief        显示DHT11 测得温度                        
+  76                  * @param        无
+  77                  * @return   无  
+  78                  * Sample usage:OLED_DHT11_Temp();
+  79              */
+  80          void OLED_DHT11_Temp()
+  81          {
+  82   1              
+  83   1          DHT11_Read_Data(&TempH,&TempL,&HumiH,&HumiL);       
+  84   1              
+  85   1              /*
+  86   1              printf("Tem:%d ℃\r\n", (int)TempH);
+  87   1              printf("Tem:%d ℃\r\n", (int)TempL);
+  88   1          printf("Hum:%d %%H\r\n", (int)HumiH);
+  89   1          printf("Hum:%d %%H\r\n", (int)HumiL);
+  90   1          */
+  91   1              
+  92   1              OLED_ShowChar(47,6,'0'+(TempH/10),16);
+  93   1              OLED_ShowChar(55,6,'0'+(TempH%10),16);
+  94   1              OLED_ShowChar(72,6,'0'+(TempL/10),16);
+  95   1              OLED_ShowChar(80,6,'0'+(TempL%10),16);  
+  96   1              OLED_ShowCHinese(1,6,11);
+  97   1              OLED_ShowCHinese(16,6,12);
+  98   1              OLED_ShowChar(32,7,':',2);      
+  99   1              OLED_ShowChar(64,7,'.',2);
+ 100   1              OLED_ShowCHinese(92,6,14);
+ 101   1              
+ 102   1              OLED_ShowChar(47,4,'0'+(HumiH/10),16);
+ 103   1              OLED_ShowChar(55,4,'0'+(HumiH%10),16);
+ 104   1              OLED_ShowChar(72,4,'0'+(HumiL/10),16);
+ 105   1              OLED_ShowChar(80,4,'0'+(HumiL%10),16);
+ 106   1              OLED_ShowCHinese(1,4,13);
+ 107   1              OLED_ShowCHinese(16,4,12);
+ 108   1              OLED_ShowChar(32,5,':',2);      
+ 109   1              OLED_ShowChar(64,5,'.',2);
+ 110   1              OLED_ShowString(92,4,"%RH",16);
+ 111   1      }
+ 112          
+ 113          /****
+ 114                  * @brief        显示DHT11 测得温度                        
+ 115                  * @param        无
+ 116                  * @return   无  
+C51 COMPILER V9.60.7.0   DEAL                                                              02/03/2023 19:41:32 PAGE 3   
+
+ 117                  * Sample usage:OLED_DS18B20_Temp(2);
+ 118              */
+ 119          void OLED_Alert_Temp()
+ 120          {
+ 121   1              OLED_ShowString(1,2,"TempH:",16);
+ 122   1          OLED_ShowString(1,4,"TempL:",16);
+ 123   1      
+ 124   1              OLED_ShowNum(56,2,Alert_Temp[0],3,16);
+ 125   1              OLED_ShowChar(50,2,'+',16);
+ 126   1              OLED_ShowChar(50,4,'-',16);
+ 127   1              OLED_ShowNum(56,4,Alert_Temp[1],3,16);
+ 128   1              OLED_ShowCHinese(92,2,14);
+ 129   1              OLED_ShowCHinese(92,4,14);
+ 130   1      }
+ 131          
+ 132          /****
+ 133                  * @brief        预警温度设置                      
+ 134                  * @param        无
+ 135                  * @return   无  
+ 136                  * Sample usage:Alert_Temp_Set();
+ 137              */
+ 138          void Alert_Temp_Set()
+ 139          {
+ 140   1              if(KeyNum)
+ 141   1              {
+ 142   2                      if(4 == KeyNum)                                                 //高温预警值 ++
+ 143   2                      {
+ 144   3                              Alert_Temp[0]++;
+ 145   3                              if(Alert_Temp[0] > 125)
+ 146   3                              {
+ 147   4                                      Alert_Temp[0] = 125;
+ 148   4                              }
+ 149   3                      }
+ 150   2                      else if(5 == KeyNum)                                    //高温预警值 --
+ 151   2                      {
+ 152   3                              Alert_Temp[0]--;
+ 153   3                              if(Alert_Temp[0] <= Alert_Temp[1])
+ 154   3                              {
+ 155   4                                      Alert_Temp[0]++;
+ 156   4                              } 
+ 157   3                      }
+ 158   2                      else if(6 == KeyNum)                                    //低温预警值 ++
+ 159   2                      {
+ 160   3                              Alert_Temp[1]++;
+ 161   3                              if(Alert_Temp[1] >= Alert_Temp[0])
+ 162   3                              {
+ 163   4                                      Alert_Temp[1]--;
+ 164   4                              } 
+ 165   3                      }
+ 166   2                      else if(7 == KeyNum)                                    //低温预警值 --
+ 167   2                      {
+ 168   3                              Alert_Temp[1]--;
+ 169   3                              if(Alert_Temp[1] <= 0)
+ 170   3                              {
+ 171   4                                      Alert_Temp[1] = 55;
+ 172   4                              }
+ 173   3                      }
+ 174   2                      AT24C02_Page_Write(0,Alert_Temp,2);             //存储预警值
+ 175   2                      OLED_Alert_Temp();
+ 176   2              }
+ 177   1      }
+ 178          
+C51 COMPILER V9.60.7.0   DEAL                                                              02/03/2023 19:41:32 PAGE 4   
+
+ 179          /****
+ 180                  * @brief        按键扫描                          
+ 181                  * @param        无
+ 182                  * @return   无  
+ 183                  * Sample usage:Key_Scan();
+ 184              */
+ 185          void Key_Scan()
+ 186          {
+ 187   1              KeyNum = key();
+ 188   1      }
+ 189          
+ 190          /****
+ 191                  * @brief        模式的选择                                        
+ 192                  * @param        无
+ 193                  * @return   无  
+ 194                  * Sample usage:Key_Scan();
+ 195              */
+ 196          void Mode_Select()
+ 197          {
+ 198   1              if(1 == KeyNum)
+ 199   1              {
+ 200   2                      OLED_Clear();
+ 201   2                      Mode = 0;               //显示温湿度
+ 202   2              }
+ 203   1              else if(2 == KeyNum)
+ 204   1              {
+ 205   2                      OLED_Clear();
+ 206   2                      Mode = 1;               //显示预警值
+ 207   2              }
+ 208   1              else if(3 == KeyNum)
+ 209   1              {
+ 210   2                      OLED_Clear();
+ 211   2                      Mode = 2;               //设置预警值
+ 212   2              }
+ 213   1              switch (Mode)
+ 214   1              {
+ 215   2                      case 0:
+ 216   2                              OLED_ShowString(1,0,"Temp Humi Test!",16);
+ 217   2                              OLED_DS18B20_Temp(2);
+ 218   2                              OLED_DHT11_Temp();
+ 219   2                      break;
+ 220   2                      
+ 221   2                      case 1:
+ 222   2                              OLED_ShowString(1,0,"Temp Warning !",16);
+ 223   2                              OLED_Alert_Temp();
+ 224   2                      break;
+ 225   2                      case 2:
+ 226   2                              OLED_ShowString(1,0,"Temp Alert Set!",16);
+ 227   2                              Alert_Temp_Set();
+ 228   2                      break;
+ 229   2                      default:
+ 230   2                              OLED_ShowString(1,0,"ERROR !",16);
+ 231   2                      break;
+ 232   2              }
+ 233   1      }
+ 234          
+ 235          /****
+ 236                  * @brief        温度报警                  
+ 237                  * @param        无
+ 238                  * @return   无  
+ 239                  * Sample usage:Temp_Alarm();
+ 240              */
+C51 COMPILER V9.60.7.0   DEAL                                                              02/03/2023 19:41:32 PAGE 5   
+
+ 241          void Temp_Alarm()
+ 242          {
+ 243   1              Mode_Select();
+ 244   1              if(T > Alert_Temp[0])
+ 245   1              {
+ 246   2                      OLED_Clear();
+ 247   2                      OLED_DS18B20_Temp(0);
+ 248   2                      OLED_ShowString(1,2,"Warning...!!!",16);
+ 249   2                      OLED_ShowString(1,4,"High Temp !!!",16);
+ 250   2                      Delay(1000);
+ 251   2              }               
+ 252   1              else if(T < (0-Alert_Temp[1]))
+ 253   1              {
+ 254   2                      OLED_Clear();
+ 255   2                      OLED_DS18B20_Temp(0);
+ 256   2                      OLED_ShowString(1,2,"Warning...!!!",16);
+ 257   2                      OLED_ShowString(1,4,"Low Temp  !!!",16);
+ 258   2                      Delay(1000);
+ 259   2              }                        
+ 260   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    725    ----
-   CONSTANT SIZE    =     20    ----
-   XDATA SIZE       =      8    ----
+   CODE SIZE        =   1463    ----
+   CONSTANT SIZE    =    131    ----
+   XDATA SIZE       =     12       1
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

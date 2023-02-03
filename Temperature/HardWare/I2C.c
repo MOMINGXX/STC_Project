@@ -1,7 +1,7 @@
 #include "I2C.h"
 
 /****
-	* @brief	IIC_SCL 引脚写入0 / 1     			  
+	* @brief	I2C_SCL 引脚写入0 / 1     			  
 	* @param   	BitValue    写入的 0 / 1 
 	* @return   无  	
 	* Sample usage:IIC_SCL(1);
@@ -13,7 +13,7 @@ static void I2C_SCL(uint8_t BitValue)
 }
 
 /****
-	* @brief	IIC_SDA 引脚写入0 / 1     			  
+	* @brief	I2C_SDA 引脚写入0 / 1     			  
 	* @param   	BitValue    写入的 0 / 1 
 	* @return   无  	
 	* Sample usage:IIC_SDA(1);
@@ -25,7 +25,7 @@ static void I2C_SDA(uint8_t BitValue)
 }
 
 /****
-	* @brief	IIC_SDA 读取引脚状态    			  
+	* @brief	I2C_SDA 读取引脚状态    			  
 	* @param   	无
 	* @return   BitValue    读取的状态 0 / 1 	
 	* Sample usage:IIC_R_SDA();

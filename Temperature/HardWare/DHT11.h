@@ -4,7 +4,7 @@
 #include <STC12C5A60S2.H>
 #include "STC12_DELAY.h"
 
-sbit DHT11_PIN = P2^3;
+sbit DHT11_PIN = P1^0;
 
 void DHT11_Init();
 uint8_t DHT11_Read_Bit();

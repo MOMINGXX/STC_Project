@@ -5,11 +5,24 @@
 #include "EEPROM.h"
 #include "UART.h"
 #include <stdio.h>
+#include "KEY.h"
 #include "oled.h"
 #include "DHT11.h"
 
+typedef enum 
+{
+    TEMPH_ADD = 4,
+    TEMPH_RED,
+    TEMPL_ADD,
+    TEMPL_RED,
+}Alert_InitTepedf;
+
 void Deal_Init();
-void OLED_DS18B20_Temp();
+void Key_Scan();
+void Temp_Alarm();
+void OLED_DS18B20_Temp(uint8_t x);
 void OLED_DHT11_Temp();
+void OLED_Alert_Temp();
+void Alert_Temp_Set();
 
 #endif	/*__Deal_H__*/

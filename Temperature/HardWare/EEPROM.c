@@ -149,10 +149,10 @@ uint8_t AT24C02_Random_Read(uint8_t Write_Addr)
 	* @brief	AT24C02连续读取数据    			  
 	* @param   	Write_Addr    AT24C02内部存储单元地址
 	* @return   Byte  	读取的数据
-    * @param   	Num     要写入的个数  0-255
+    * @param   	Num     要写入的个数  0-256
 	* Sample usage:AT24C02_Sequential_Read(1,arr,8);
     */
-void AT24C02_Sequential_Read(uint8_t Write_Addr,uint8_t *Byte,uint8_t Num)
+void AT24C02_Sequential_Read(uint8_t Write_Addr,uint8_t *Byte,uint16_t Num)
 {
 	uint16_t i = 0;
 	I2C_Start();

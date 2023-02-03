@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   EEPROM                                                            02/01/2023 18:01:59 PAGE 1   
+C51 COMPILER V9.60.7.0   EEPROM                                                            02/03/2023 19:41:32 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE EEPROM
@@ -62,7 +62,7 @@ line level    source
   52                  * @return   无          
   53                  * Sample usage:AT24C02_Buffer_Write(1,arr,8);
   54              */
-C51 COMPILER V9.60.7.0   EEPROM                                                            02/01/2023 18:01:59 PAGE 2   
+C51 COMPILER V9.60.7.0   EEPROM                                                            02/03/2023 19:41:32 PAGE 2   
 
   55          void AT24C02_Buffer_Write(uint8_t Write_Addr,uint8_t *Byte,uint8_t Num)
   56          {
@@ -126,7 +126,7 @@ line level    source
  114   4                      Byte += AT24C02_PageSize;  
  115   4                  }
  116   3                  if(NumOfSingle != 0)
-C51 COMPILER V9.60.7.0   EEPROM                                                            02/01/2023 18:01:59 PAGE 3   
+C51 COMPILER V9.60.7.0   EEPROM                                                            02/03/2023 19:41:32 PAGE 3   
 
  117   3                  {
  118   4                      AT24C02_Page_Write(Write_Addr, Byte, NumOfSingle); 
@@ -163,10 +163,10 @@ line level    source
  149                  * @brief        AT24C02连续读取数据                       
  150                  * @param        Write_Addr    AT24C02内部存储单元地址
  151                  * @return   Byte        读取的数据
- 152              * @param    Num     要写入的个数  0-255
+ 152              * @param    Num     要写入的个数  0-256
  153                  * Sample usage:AT24C02_Sequential_Read(1,arr,8);
  154              */
- 155          void AT24C02_Sequential_Read(uint8_t Write_Addr,uint8_t *Byte,uint8_t Num)
+ 155          void AT24C02_Sequential_Read(uint8_t Write_Addr,uint8_t *Byte,uint16_t Num)
  156          {
  157   1              uint16_t i = 0;
  158   1              I2C_Start();
@@ -190,7 +190,7 @@ line level    source
  176   3                              I2C_Send_Ack(0);
  177   3                      }
  178   2              }
-C51 COMPILER V9.60.7.0   EEPROM                                                            02/01/2023 18:01:59 PAGE 4   
+C51 COMPILER V9.60.7.0   EEPROM                                                            02/03/2023 19:41:32 PAGE 4   
 
  179   1              I2C_Stop();
  180   1      }
@@ -198,9 +198,9 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    638    ----
+   CODE SIZE        =    645    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----      24
+   XDATA SIZE       =   ----      25
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

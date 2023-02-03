@@ -5,6 +5,7 @@
 ".\Objects\oled.obj",
 ".\Objects\EEPROM.obj",
 ".\Objects\I2C.obj",
+".\Objects\KEY.obj",
 ".\Objects\UART.obj",
 ".\Objects\STC12_DELAY.obj" 
 TO ".\Objects\Project" 
