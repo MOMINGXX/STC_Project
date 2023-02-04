@@ -25,12 +25,10 @@ void Deal_Init()
 	
 	//如果阈值非法，则设为默认值
 	AT24C02_Sequential_Read(0,Alert_Temp,2);
+	if(Alert_Temp[0] > 125 || Alert_Temp[1] <-55 || Alert_Temp[0] <= Alert_Temp[1])
 	{
-		if(Alert_Temp[0] > 125 || Alert_Temp[1] <-55 || Alert_Temp[0] <= Alert_Temp[1])
-		{
-			Alert_Temp[0] = 30;
-			Alert_Temp[1] = 10;
-		}
+		Alert_Temp[0] = 30;
+		Alert_Temp[1] = 10;
 	}
 }
 
@@ -66,7 +64,7 @@ void OLED_DS18B20_Temp(uint8_t x)
 	}
 	else
 	{
-		OLED_ShowString(1,0,"Wrong Position!",16);
+		OLED_ShowString(1,x,"Wrong Position!",16);
 	}
 
 }
@@ -191,7 +189,7 @@ void Key_Scan()
 	* @brief	模式的选择					  
 	* @param   	无
 	* @return   无 	
-	* Sample usage:Key_Scan();
+	* Sample usage:Mode_Select();
     */
 void Mode_Select()
 {
