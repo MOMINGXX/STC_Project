@@ -3,9 +3,10 @@
 
 #include <STC12C5A60S2.H>
 
-#define SYS_CLK 24000000L
+//#define SYS_CLK 11059200L
+
 #if !defined(SYS_CLK)
-#define SYS_CLK 11059200L
+#define SYS_CLK 24000000L
 #endif
 
 #define SMOD 0		
@@ -29,13 +30,24 @@
 #define UART1_GET_TX_FLAG   (SCON  & 0x02)
 #define UART2_GET_TX_FLAG   (S2CON & 0x02)
 
-#define DATA_MAX	100
+#define DATA_MAX			10
+#define PACKAGE_MAXSIZE 	32
 
-extern uint8_t RX1_DAT[DATA_MAX];
+typedef struct
+{
+	uint16_t RX_Head;
+	uint8_t RX_CMD;
+	uint8_t DATA_Len;
+	uint8_t RX_Data[PACKAGE_MAXSIZE];
+	uint16_t CRC16;
+}RXPACKAGE_typedef;
+
 extern bit Flag1;
+extern RXPACKAGE_typedef RXPACKAGE;
 
 extern uint8_t RX2_DAT[DATA_MAX];
 extern bit Flag2;
+
 
 typedef enum
 {

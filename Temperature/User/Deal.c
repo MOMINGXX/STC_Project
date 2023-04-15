@@ -1,6 +1,8 @@
 #include "Deal.h"
 
 //Alert_Temp[0]	¸ßÎÂ±¨¾¯Öµ	Alert_Temp[1]		µÍÎÂ±¨¾¯Öµ
+
+uint16_t CRC;
 uint8_t Alert_Temp[2];
 char TempH,TempL,HumiH,HumiL;
 float T;
@@ -17,7 +19,7 @@ uint8_t KeyNum = 0;
     */
 void Deal_Init()
 {
-    Uart_Init(UART_1,GPIORX_P30,GPIOTX_P31,9600,TIM_BRT);	
+    Uart_Init(UART_1,GPIORX_P30,GPIOTX_P31,9600,TIM_1);
 	Timer0_Init();
 	DHT11_Init();
 	OLED_Init();
@@ -67,6 +69,28 @@ void OLED_DS18B20_Temp(uint8_t x)
 		OLED_ShowString(1,x,"Wrong Position!",16);
 	}
 
+	if (Flag1)
+	{
+		CRC = CRC_Table((uint8_t *)&RXPACKAGE, RXPACKAGE.DATA_Len - 2);
+		if (((RXPACKAGE.CRC16 & 0xFF) == (CRC & 0xFF)) && ((RXPACKAGE.CRC16 >> 8) == (CRC >> 8)))
+		{
+			if(0x11 == RXPACKAGE.RX_CMD)			//	A5 6A 11 06 8E A6
+			{
+				printf("DS18B20 Temp: %.2f ¡æ\n",T);
+			}
+			else if(0x12 == RXPACKAGE.RX_CMD)		//		A5 6A 12 06 8E 56
+			{
+				printf("TempH Warning: %d ¡æ\n",Alert_Temp[0]);
+				printf("TempL Warning: %d ¡æ\n",Alert_Temp[1]);
+			}
+		}
+		else
+		{
+			printf("DS18B20 Check ERROR\n");
+		}
+		Flag1 = 0;
+	}
+
 }
 
 /****
@@ -106,6 +130,29 @@ void OLED_DHT11_Temp()
 	OLED_ShowChar(32,5,':',2);	
 	OLED_ShowChar(64,5,'.',2);
 	OLED_ShowString(92,4,"%RH",16);
+
+	
+	if (Flag1)
+	{
+		CRC = CRC_Table((uint8_t *)&RXPACKAGE, RXPACKAGE.DATA_Len - 2);
+		if (((RXPACKAGE.CRC16 & 0xFF) == (CRC & 0xFF)) && ((RXPACKAGE.CRC16 >> 8) == (CRC >> 8)))
+		{
+			if(0x13 == RXPACKAGE.RX_CMD)			//	A5 6A 13 06 8F C6
+			{
+				printf("DHT11 Temp: %d.%d ¡æ\n",(int)TempH,(int)TempL);
+				printf("DHT11 Humi: %d.%d %%H\n",(int)HumiH,(int)HumiL);
+			}
+			else
+			{
+				printf("Read DHT11 Temp CMD ERROR\n");
+			}
+		}
+		else
+		{
+			printf("DHT11 Check ERROR\n");
+		}
+		Flag1 = 0;
+	}
 }
 
 /****
@@ -169,9 +216,33 @@ void Alert_Temp_Set()
 				Alert_Temp[1] = 55;
 			}
 		}
-		AT24C02_Page_Write(0,Alert_Temp,2);		//´æ´¢Ô¤¾¯Öµ
-		OLED_Alert_Temp();
 	}
+
+	if (Flag1)
+	{
+		CRC = CRC_Table((uint8_t *)&RXPACKAGE, RXPACKAGE.DATA_Len - 2);
+		if (((RXPACKAGE.CRC16 & 0xFF) == (CRC & 0xFF)) && ((RXPACKAGE.CRC16 >> 8) == (CRC >> 8)))
+		{
+			if(0x14 == RXPACKAGE.RX_CMD)			//	A5 6A 14 08 23 0A 1D E2
+			{
+				Alert_Temp[0] = RXPACKAGE.RX_Data[0];
+				Alert_Temp[1] = RXPACKAGE.RX_Data[1];
+				printf("Warning Temp Set Done\n");
+			}
+			else
+			{
+				printf("Warning Temp Set CMD ERROR\n");
+			}
+		}
+		else
+		{
+			printf("Warning Temp Set Check ERROR\n");
+		}
+		Flag1 = 0;
+	}
+	
+	AT24C02_Page_Write(0,Alert_Temp,2);		//´æ´¢Ô¤¾¯Öµ
+	OLED_Alert_Temp();
 }
 
 /****

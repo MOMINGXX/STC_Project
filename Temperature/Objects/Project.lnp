@@ -1,13 +1,14 @@
-".\Objects\main.obj",
-".\Objects\Deal.obj",
+".\Objects\UART.obj",
+".\Objects\STC12_DELAY.obj",
 ".\Objects\DHT11.obj",
 ".\Objects\DS18B20.obj",
 ".\Objects\oled.obj",
 ".\Objects\EEPROM.obj",
 ".\Objects\I2C.obj",
 ".\Objects\KEY.obj",
-".\Objects\UART.obj",
-".\Objects\STC12_DELAY.obj" 
+".\Objects\CRC16.obj",
+".\Objects\main.obj",
+".\Objects\Deal.obj" 
 TO ".\Objects\Project" 
 PRINT(".\Listings\Project.m51") RAMSIZE(256) 
 DISABLEWARNING (16) 

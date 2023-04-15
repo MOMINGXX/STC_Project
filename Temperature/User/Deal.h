@@ -8,6 +8,7 @@
 #include "KEY.h"
 #include "oled.h"
 #include "DHT11.h"
+#include "CRC16.h"
 
 typedef enum 
 {

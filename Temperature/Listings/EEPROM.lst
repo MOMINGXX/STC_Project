@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   EEPROM                                                            02/04/2023 17:30:13 PAGE 1   
+C51 COMPILER V9.60.7.0   EEPROM                                                            04/16/2023 00:34:27 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE EEPROM
@@ -62,7 +62,7 @@ line level    source
   52                  * @return   нч          
   53                  * Sample usage:AT24C02_Buffer_Write(1,arr,8);
   54              */
-C51 COMPILER V9.60.7.0   EEPROM                                                            02/04/2023 17:30:13 PAGE 2   
+C51 COMPILER V9.60.7.0   EEPROM                                                            04/16/2023 00:34:27 PAGE 2   
 
   55          void AT24C02_Buffer_Write(uint8_t Write_Addr,uint8_t *Byte,uint8_t Num)
   56          {
@@ -126,7 +126,7 @@ line level    source
  114   4                      Byte += AT24C02_PageSize;  
  115   4                  }
  116   3                  if(NumOfSingle != 0)
-C51 COMPILER V9.60.7.0   EEPROM                                                            02/04/2023 17:30:13 PAGE 3   
+C51 COMPILER V9.60.7.0   EEPROM                                                            04/16/2023 00:34:27 PAGE 3   
 
  117   3                  {
  118   4                      AT24C02_Page_Write(Write_Addr, Byte, NumOfSingle); 
@@ -190,7 +190,7 @@ line level    source
  176   3                              I2C_Send_Ack(0);
  177   3                      }
  178   2              }
-C51 COMPILER V9.60.7.0   EEPROM                                                            02/04/2023 17:30:13 PAGE 4   
+C51 COMPILER V9.60.7.0   EEPROM                                                            04/16/2023 00:34:27 PAGE 4   
 
  179   1              I2C_Stop();
  180   1      }

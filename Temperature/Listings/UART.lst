@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   UART                                                              02/04/2023 17:30:13 PAGE 1   
+C51 COMPILER V9.60.7.0   UART                                                              04/16/2023 00:34:27 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE UART
@@ -10,316 +10,324 @@ line level    source
 
    1          #include "UART.h"
    2          
-   3          uint8_t DAT1;                           //存放接收的字符
-   4          uint8_t RX1_BUFF[DATA_MAX];             //接收的数据    缓冲区
-   5          uint8_t RX1_DAT[DATA_MAX];                      //存放接收的数据
-   6          uint8_t RX1_COUNT=0;                    //接收计数
-   7          bit Flag1 = 0;                          //标志位
-   8          
-   9          uint8_t DAT2;                           //存放接收的字符
-  10          uint8_t RX2_BUFF[DATA_MAX];             //接收的数据    缓冲区
-  11          uint8_t RX2_DAT[DATA_MAX];                      //存放接收的数据
-  12          uint8_t RX2_COUNT=0;                    //接收计数
-  13          bit Flag2 = 0;                          //标志位
-  14          
-  15          
-  16          /****
-  17                  @brief      串口初始化
-  18                  @param          Uart_n                  串口号  UART_1,UART_2
-  19                  @param          GPIORX_Pin              接收I/O口       P30 P12 P42
-  20                  @param          GPIOTX_Pin              发送I/O口       P31 P13 P43
-  21                  @param          baud                    波特率  115200 57600 9600 4800 2400
-  22                  @param          Tim_n                   波特率发生器
-  23                  @return     无          
-  24                  Sample usage:  Uart_Init(UART_1,GPIORX_P30,GPIOTX_P31,9600,Tim_1);             
-  25                  @note    若需波特率加倍 则将    #define SMOD 0  -->  #define SMOD 1
-  26          ****/
-  27          void Uart_Init(UART_NAME Uart_n,GPIO_PIN GPIORX_Pin,GPIO_PIN GPIOTX_Pin,uint16_t baud,UART_TIM Tim_n)   
-  28          {
-  29   1              switch(Uart_n)
-  30   1              {               
-  31   2                      case UART_1:
-  32   2                      {
-  33   3                              SCON = 0x50;            //8位数据,可变波特率
-  34   3                              #if SMOD == 0
-  35   3                              PCON &= 0x7F;           //波特率不倍速
-  36   3                              #elif SMOD == 1
-                                      PCON |= 0x80;           //使能波特率倍速位SMOD
-                                      #endif
-  39   3                              if(TIM_1 == Tim_n)
-  40   3                              {
-  41   4                                      AUXR |= 0x40;           //定时器时钟1T模式
-  42   4                                      AUXR &= 0xFE;           //串口1选择定时器1为波特率发生器
-  43   4                                      TMOD &= 0x0F;           //设置定时器模式
-  44   4                                      TMOD |= 0x20;           //设置定时器模式
-  45   4                                      #if SMOD == 1
-                                              TL1 = TH1 = -(2*SYS_CLK/32/baud);               //设置定时器初始值与重载值
-                                              #elif SMOD == 0
-  48   4                                      TL1 = TH1 = -(SYS_CLK/32/baud);         //设置定时器初始值与重载值
-  49   4                                      #endif
-  50   4                                      
-  51   4                                      #ifndef OPEN_EA
-  52   4                                      ET1 = 0;                        //禁止定时器中断
-  53   4                                      TR1 = 1;                        //定时器1开始计时
-  54   4                                      #endif
-C51 COMPILER V9.60.7.0   UART                                                              02/04/2023 17:30:13 PAGE 2   
+   3          RXPACKAGE_typedef RXPACKAGE;
+   4          bit Flag1 = 0; // 标志位
+   5          
+   6          uint8_t DAT2;                           // 存放接收的字符
+   7          uint8_t RX2_BUFF[DATA_MAX]; // 接收的数据       缓冲区
+   8          uint8_t RX2_DAT[DATA_MAX];      // 存放接收的数据
+   9          uint8_t RX2_COUNT = 0;          // 接收计数
+  10          bit Flag2 = 0;                          // 标志位
+  11          
+  12          /****
+  13                  @brief      串口初始化
+  14                  @param          Uart_n                  串口号  USART_1,USART_2
+  15                  @param          GPIORX_Pin              接收I/O口       P30 P12 P42
+  16                  @param          GPIOTX_Pin              发送I/O口       P31 P13 P43
+  17                  @param          baud                    波特率  115200 57600 9600 4800 2400
+  18                  @param          Tim_n                   波特率发生器
+  19                  @return     无
+  20                  Sample usage:  Uart_Init(UART_1,GPIORX_P30,GPIOTX_P31,9600,Tim_1);
+  21                  @note    若需波特率加倍 则将    #define SMOD 0  -->  #define SMOD 1
+  22          ****/
+  23          void Uart_Init(UART_NAME Uart_n, GPIO_PIN GPIORX_Pin, GPIO_PIN GPIOTX_Pin, uint16_t baud, UART_TIM Tim_n)
+  24          {
+  25   1              switch (Uart_n)
+  26   1              {
+  27   2              case UART_1:
+  28   2              {
+  29   3                      SCON = 0x50; // 8位数据,可变波特率
+  30   3      #if SMOD == 0
+  31   3                      PCON &= 0x7F; // 波特率不倍速
+  32   3      #elif SMOD == 1
+                              PCON |= 0x80;                                                   // 使能波特率倍速位SMOD
+              #endif
+  35   3                      if (TIM_1 == Tim_n)
+  36   3                      {
+  37   4                              AUXR |= 0x40; // 定时器时钟1T模式
+  38   4                              AUXR &= 0xFE; // 串口1选择定时器1为波特率发生器
+  39   4                              TMOD &= 0x0F; // 设置定时器模式
+  40   4                              TMOD |= 0x20; // 设置定时器模式
+  41   4      #if SMOD == 1
+                                      TL1 = TH1 = -(2 * SYS_CLK / 32 / baud); // 设置定时器初始值与重载值
+              #elif SMOD == 0
+  44   4                              TL1 = TH1 = -(SYS_CLK / 32 / baud); // 设置定时器初始值与重载值
+  45   4      #endif
+  46   4      
+  47   4      #ifndef OPEN_EA
+  48   4                              ET1 = 0; // 禁止定时器中断
+  49   4                              TR1 = 1; // 定时器1开始计时
+  50   4      #endif
+  51   4                      }
+  52   3                      else if (TIM_BRT == Tim_n)
+  53   3                      {
+  54   4      #if SMOD == 1
+C51 COMPILER V9.60.7.0   UART                                                              04/16/2023 00:34:27 PAGE 2   
 
-  55   4                              }
-  56   3                              else if(TIM_BRT == Tim_n)
-  57   3                              {
-  58   4                                      #if SMOD == 1
-                                              BRT = -(2*SYS_CLK/32/baud);                     //设置定时重载值
-                                              #elif SMOD == 0
-  61   4                                      BRT = -(SYS_CLK/32/baud);                       //设置定时重载值
-  62   4                                      #endif
-  63   4                                      AUXR |= 0x04;           //定时器时钟1T模式
-  64   4                                      AUXR |= 0x01;           //串口1使用独立波特率发射器为波特率发生器
-  65   4                                      AUXR |= 0x10;           //启动独立波特率发射器
-  66   4                              }
-  67   3                              if(GPIORX_P30 == GPIORX_Pin && GPIOTX_P31 == GPIOTX_Pin)
-  68   3                              {
-  69   4                                      //P30双向IO口
-  70   4                                      P3M1 &= ~0x01;  
-  71   4                                      P3M0 &= ~0x01;
-  72   4                                      //P31双向IO口
-  73   4                                      P3M1 &= ~0x02;
-  74   4                                      P3M0 &= ~0x02;
-  75   4                              }
-  76   3                              break;
-  77   3                      }
-  78   2                      case UART_2:
-  79   2                      {
-  80   3                              #if SMOD == 1
-                                      AUXR |= 0x08;           //使能波特率倍速位S2SMOD
-                                      BRT = -(2*SYS_CLK/32/baud);                     //设置定时重载值
-                                      #elif SMOD == 0
-  84   3                              AUXR &= 0xF7;           //波特率不倍速
-  85   3                              BRT = -(SYS_CLK/32/baud);                       //设置定时重载值
-  86   3                              #endif
-  87   3                              S2CON = 0x50;           //8位数据,可变波特率
-  88   3                              AUXR |= 0x04;           //定时器时钟1T模式
-  89   3                              AUXR |= 0x10;           //启动独立波特率发射器
-  90   3                              if(GPIORX_P12 == GPIORX_Pin && GPIOTX_P13 == GPIOTX_Pin)
-  91   3                              {
-  92   4                                      //P12双向IO口
-  93   4                                      P1M1 &= ~0x40;
-  94   4                                      P1M0 &= ~0x40;
-  95   4                                      
-  96   4                                      //P13双向IO口
-  97   4                                      P1M1 &= ~0x80;
-  98   4                                      P1M0 &= ~0x80;
-  99   4                                      AUXR1 &= ~0x10;
- 100   4                              }
- 101   3                              else if(GPIORX_P42 == GPIORX_Pin && GPIOTX_P43 == GPIOTX_Pin)
- 102   3                              {
- 103   4                                      //P42双向IO口
- 104   4                                      P4M1 &= ~0x40;
- 105   4                                      P4M0 &= ~0x40;
- 106   4                                      
- 107   4                                      //P43双向IO口
- 108   4                                      P4M1 &= ~0x80;
- 109   4                                      P4M0 &= ~0x80;
- 110   4                                      AUXR1 |= 0x10;
- 111   4                              }
- 112   3                              break;
- 113   3                      }
- 114   2              }
- 115   1      }
- 116          
-C51 COMPILER V9.60.7.0   UART                                                              02/04/2023 17:30:13 PAGE 3   
+                                      BRT = -(2 * SYS_CLK / 32 / baud); // 设置定时重载值
+              #elif SMOD == 0
+  57   4                              BRT = -(SYS_CLK / 32 / baud);           // 设置定时重载值
+  58   4      #endif
+  59   4                              AUXR |= 0x04; // 定时器时钟1T模式
+  60   4                              AUXR |= 0x01; // 串口1使用独立波特率发射器为波特率发生器
+  61   4                              AUXR |= 0x10; // 启动独立波特率发射器
+  62   4                      }
+  63   3                      if (GPIORX_P30 == GPIORX_Pin && GPIOTX_P31 == GPIOTX_Pin)
+  64   3                      {
+  65   4                              // P30双向IO口
+  66   4                              P3M1 &= ~0x01;
+  67   4                              P3M0 &= ~0x01;
+  68   4                              // P31双向IO口
+  69   4                              P3M1 &= ~0x02;
+  70   4                              P3M0 &= ~0x02;
+  71   4                      }
+  72   3                      break;
+  73   3              }
+  74   2              case UART_2:
+  75   2              {
+  76   3      #if SMOD == 1
+                              AUXR |= 0x08;                                     // 使能波特率倍速位S2SMOD
+                              BRT = -(2 * SYS_CLK / 32 / baud); // 设置定时重载值
+              #elif SMOD == 0
+  80   3                      AUXR &= 0xF7;                                                   // 波特率不倍速
+  81   3                      BRT = -(SYS_CLK / 32 / baud);                   // 设置定时重载值
+  82   3      #endif
+  83   3                      S2CON = 0x50; // 8位数据,可变波特率
+  84   3                      AUXR |= 0x04; // 定时器时钟1T模式
+  85   3                      AUXR |= 0x10; // 启动独立波特率发射器
+  86   3                      if (GPIORX_P12 == GPIORX_Pin && GPIOTX_P13 == GPIOTX_Pin)
+  87   3                      {
+  88   4                              // P12双向IO口
+  89   4                              P1M1 &= ~0x40;
+  90   4                              P1M0 &= ~0x40;
+  91   4      
+  92   4                              // P13双向IO口
+  93   4                              P1M1 &= ~0x80;
+  94   4                              P1M0 &= ~0x80;
+  95   4                              AUXR1 &= ~0x10;
+  96   4                      }
+  97   3                      else if (GPIORX_P42 == GPIORX_Pin && GPIOTX_P43 == GPIOTX_Pin)
+  98   3                      {
+  99   4                              // P42双向IO口
+ 100   4                              P4M1 &= ~0x40;
+ 101   4                              P4M0 &= ~0x40;
+ 102   4      
+ 103   4                              // P43双向IO口
+ 104   4                              P4M1 &= ~0x80;
+ 105   4                              P4M0 &= ~0x80;
+ 106   4                              AUXR1 |= 0x10;
+ 107   4                      }
+ 108   3                      break;
+ 109   3              }
+ 110   2              }
+ 111   1      }
+ 112          
+ 113          /****
+ 114                  @brief      串口发送一个字节
+ 115                  @param          uart_n          串口号  USART_1,USART_2
+ 116                  @param          Byte                    要发送的字节
+C51 COMPILER V9.60.7.0   UART                                                              04/16/2023 00:34:27 PAGE 3   
 
- 117          /****
- 118                  @brief      串口发送一个字节
- 119                  @param          uart_n          串口号  UART_1,UART_2
- 120                  @param     Byte                         要发送的字节    
- 121                  @return     无
- 122                  Sample usage:    Uart_SendByte(UART_1,'p');  
- 123          ****/
- 124          void Uart_SendByte(UART_NAME Uart_n,uint8_t Byte)
- 125          {
- 126   1              switch(Uart_n)
- 127   1              {
- 128   2                      case UART_1:
- 129   2                      {
- 130   3                              SBUF=Byte;
- 131   3                              while (UART1_GET_TX_FLAG == 0);
- 132   3                              UART1_CLEAR_TX_FLAG;
- 133   3                      }
- 134   2                              break;
- 135   2                      case UART_2:
- 136   2                      {
- 137   3                              S2BUF=Byte;
- 138   3                              while(UART2_GET_TX_FLAG==0);
- 139   3                              UART2_CLEAR_TX_FLAG;
- 140   3                      }
- 141   2                              break;
- 142   2              }
- 143   1      }
- 144          
- 145          /****
- 146                  @brief      串口发送一个字符串 
- 147                  @param          uart_n          串口号  UART_1,UART_2
- 148                  @param          String                  要发送的字符串 
- 149                  @return     无          
- 150                  Sample usage:     Uart_SendString(UART_1,"ABCD");    
- 151          ****/
- 152          void Uart_SendString(UART_NAME Uart_n,uint8_t *String)
- 153          {
- 154   1              while(*String != '\0')
- 155   1              {
- 156   2                      Uart_SendByte(Uart_n,*String++);
- 157   2              }
- 158   1      }
- 159          
- 160          /****
- 161                  @brief      串口发送数组
- 162                  @param          uart_n          串口号  UART_1,UART_2
- 163                  @param          Buff                    要发送的数组 
- 164                  @param          Len                             数组长度
- 165                  @return     无          
- 166                  Sample usage:     Uart_SendString(UART_1,arr,sizeof(arr)/sizeof(arr[0]));    
- 167          ****/
- 168          void Uart_SendBuff(UART_NAME Uart_n,uint8_t *Buff,uint16_t Len)
- 169          {
- 170   1              while(Len--)
- 171   1              {
- 172   2                      Uart_SendByte(Uart_n,*Buff++);
- 173   2              }
- 174   1      }
- 175          
- 176          /****
- 177                  * @brief        平方计算                          
- 178              * @param    X        基值
-C51 COMPILER V9.60.7.0   UART                                                              02/04/2023 17:30:13 PAGE 4   
+ 117                  @return     无
+ 118                  Sample usage:    Uart_SendByte(UART_1,'p');
+ 119          ****/
+ 120          void Uart_SendByte(UART_NAME Uart_n, uint8_t Byte)
+ 121          {
+ 122   1              switch (Uart_n)
+ 123   1              {
+ 124   2              case UART_1:
+ 125   2              {
+ 126   3                      SBUF = Byte;
+ 127   3                      while (!UART1_GET_TX_FLAG);
+ 128   3                      UART1_CLEAR_TX_FLAG;
+ 129   3              }
+ 130   2              break;
+ 131   2              case UART_2:
+ 132   2              {
+ 133   3                      S2BUF = Byte;
+ 134   3                      while (UART2_GET_TX_FLAG == 0);
+ 135   3                      UART2_CLEAR_TX_FLAG;
+ 136   3              }
+ 137   2              break;
+ 138   2              }
+ 139   1      }
+ 140          
+ 141          /****
+ 142                  @brief      串口发送一个字符串
+ 143                  @param          uart_n          串口号  USART_1,USART_2
+ 144                  @param          String                  要发送的字符串
+ 145                  @return     无
+ 146                  Sample usage:     Uart_SendString(UART_1,"ABCD");
+ 147          ****/
+ 148          void Uart_SendString(UART_NAME Uart_n, uint8_t *String)
+ 149          {
+ 150   1              while (*String != '\0')
+ 151   1              {
+ 152   2                      Uart_SendByte(Uart_n, *String++);
+ 153   2              }
+ 154   1      }
+ 155          
+ 156          /****
+ 157                  @brief      串口发送数组
+ 158                  @param          uart_n          串口号  USART_1,USART_2
+ 159                  @param          Buff                    要发送的数组
+ 160                  @param          Len                             数组长度
+ 161                  @return     无
+ 162                  Sample usage:     Uart_SendString(UART_1,arr,sizeof(arr)/sizeof(arr[0]));
+ 163          ****/
+ 164          void Uart_SendBuff(UART_NAME Uart_n, uint8_t *Buff, uint16_t Len)
+ 165          {
+ 166   1              while (Len--)
+ 167   1              {
+ 168   2                      Uart_SendByte(Uart_n, *Buff++);
+ 169   2              }
+ 170   1      }
+ 171          
+ 172          /****
+ 173                  @brief      printf打印
+ 174                  @param          c
+ 175                  @return     c
+ 176                  Sample usage:  printf("Hello\n");
+ 177          ****/
+ 178          #if (PRINTF_SELECT == 1)
+C51 COMPILER V9.60.7.0   UART                                                              04/16/2023 00:34:27 PAGE 4   
 
- 179              * @param    Y        指数的值
- 180                  * @return   Result   x 的 y 次幂的结果  
- 181                  * Sample usage: Usart_Pow(10,Length);
- 182              */
- 183          static uint32_t Usart_Pow(uint32_t X, uint32_t Y)
- 184          {
- 185   1          //X^Y
- 186   1          uint32_t Result = 1;
- 187   1          while(Y--)
- 188   1          {
- 189   2              Result *= X;
- 190   2          }
- 191   1          return Result;
- 192   1      }
- 193          
- 194          /****
- 195                  * @brief        串口发送数字                      
- 196                  * @param        UARTx  串口号  UART_1,UART_2
- 197              * @param    Number  要发送的数字
- 198              * @param    Length  数字的长度
- 199                  * @return   无          
- 200                  * Sample usage: Usart_SendNumber(UART_1,12345,5);
- 201              */
- 202          void Usart_SendNumber(UART_NAME Uart_n,uint32_t Number,uint8_t Length)
- 203          {
- 204   1          while(Length--)
- 205   1          {
- 206   2              Uart_SendByte(Uart_n,Number / Usart_Pow(10,Length) % 10 + '0'); //23 2 3
- 207   2          }
- 208   1      }
- 209          
- 210          /****
- 211                  @brief      printf打印
- 212                  @param          c
- 213                  @return     c           
- 214                  Sample usage:  printf("Hello\n"); 
- 215          ****/
- 216          #if (PRINTF_SELECT == 1)
- 217          uint8_t putchar(uint8_t c)
- 218          {
- 219   1              if(c == '\n')
- 220   1              {
- 221   2                      Uart_SendByte(UART_1,0x0D);
- 222   2              }
- 223   1              Uart_SendByte(UART_1,c);
- 224   1              return c;
- 225   1      }
- 226          
- 227          #else
-              uint8_t putchar(uint8_t c)
+ 179          int putchar(int c)
+ 180          {
+ 181   1              if (c == '\n')
+ 182   1              {
+ 183   2                      Uart_SendByte(UART_1, 0x0D);
+ 184   2              }
+ 185   1              Uart_SendByte(UART_1, c);
+ 186   1              return c;
+ 187   1      }
+ 188          
+ 189          #elif (PRINTF_SELECT == 2)
+              char putchar(char c)
               {
-                      if(c == '\n')
+                      if (c == '\n')
                       {
-                              Uart_SendByte(UART_2,0x0D);
+                              Uart_SendByte(UART_1, 0x0D);
                       }
-                      Uart_SendByte(UART_2,c);
+                      Uart_SendByte(UART_1, c);
                       return c;
               }
               #endif
- 238          
- 239          /*
- 240          //不换行
-C51 COMPILER V9.60.7.0   UART                                                              02/04/2023 17:30:13 PAGE 5   
+ 200          
+ 201          /*
+ 202          //不换行
+ 203          #if (PRINTF_SELECT == 1)
+ 204          char putchar(char c)
+ 205          {
+ 206                  Uart_SendByte(UART_1,c);
+ 207                  return c;
+ 208          }
+ 209          
+ 210          #elif (PRINTF_SELECT == 2)
+ 211          char putchar(char c)
+ 212          {
+ 213                  Uart_SendByte(UART_1,c);
+ 214                  return c;
+ 215          }
+ 216          #endif
+ 217          */
+ 218          
+ 219          // 串口1中断接收数据
+ 220          #if UART_ROUTINE_SELECT == 1
+ 221          void Uart1_Routine() interrupt 4
+ 222          {
+ 223   1              static uint8_t RX_Count = 0;
+ 224   1              uint8_t RX_Temp = 0;
+ 225   1              if (UART1_GET_RX_FLAG)
+ 226   1              {
+ 227   2                      UART1_CLEAR_RX_FLAG;
+ 228   2                      RX_Temp = SBUF;
+ 229   2                      if (0 == RX_Count)
+ 230   2                      {
+ 231   3                              if (0xA5 == RX_Temp)
+ 232   3                              {
+ 233   4                                      RX_Count++;
+ 234   4                              }
+ 235   3                      }
+ 236   2                      else if (1 == RX_Count)
+ 237   2                      {
+ 238   3                              if (0x6A == RX_Temp)
+ 239   3                              {
+ 240   4                                      RX_Count++;
+C51 COMPILER V9.60.7.0   UART                                                              04/16/2023 00:34:27 PAGE 5   
 
- 241          #if (PRINTF_SELECT == 1)
- 242          char putchar(char c)
- 243          {
- 244                  Uart_SendByte(UART_1,c);
- 245                  return c;
- 246          }
- 247          
- 248          #elif (PRINTF_SELECT == 2)
- 249          char putchar(char c)
- 250          {
- 251                  Uart_SendByte(UART_1,c);
- 252                  return c;
- 253          }
- 254          #endif
- 255          */
- 256          
- 257          //串口1中断接收数据
- 258          #if (UART_ROUTINE_SELECT == 1)
- 259          void Uart1_Routine() interrupt 4
- 260          {
- 261   1              static uint8_t i=0;
- 262   1              if(UART1_GET_RX_FLAG)
- 263   1              {
- 264   2                      UART1_CLEAR_RX_FLAG;
- 265   2                      DAT1 = SBUF;
- 266   2                      if(DAT1 != '#')                         //'#'结束标志
+ 241   4                                      RXPACKAGE.RX_Head = 0xA56A;
+ 242   4                              }
+ 243   3                              else
+ 244   3                              {
+ 245   4                                      RX_Count = 0;
+ 246   4                              }
+ 247   3                      }
+ 248   2                      else if (2 == RX_Count)
+ 249   2                      {
+ 250   3                              RX_Count++;
+ 251   3                              RXPACKAGE.RX_CMD = RX_Temp;
+ 252   3                      }
+ 253   2                      else if (3 == RX_Count)
+ 254   2                      {
+ 255   3                              RX_Count++;
+ 256   3                              if (RX_Temp <= PACKAGE_MAXSIZE)
+ 257   3                              {
+ 258   4                                      RXPACKAGE.DATA_Len = RX_Temp;
+ 259   4                              }
+ 260   3                              else
+ 261   3                              {
+ 262   4                                      RX_Count = 0;
+ 263   4                                      RXPACKAGE.DATA_Len = 0;
+ 264   4                              }
+ 265   3                      }
+ 266   2                      else if (RX_Count < RXPACKAGE.DATA_Len - 2)
  267   2                      {
- 268   3                              RX1_BUFF[RX1_COUNT++] = DAT1++;
- 269   3                      }
- 270   2                      else
- 271   2                      {
- 272   3                              for(i=0;i<RX1_COUNT;i++)
- 273   3                              {
- 274   4                                      RX1_DAT[i] = RX1_BUFF[i];
- 275   4                              }
- 276   3                              RX1_COUNT=0;
- 277   3                              Flag1=1;
- 278   3                      }
- 279   2              }
- 280   1      }
- 281          
- 282          //串口2中断接收数据
- 283          #elif (UART_ROUTINE_SELECT == 2)
+ 268   3                              RXPACKAGE.RX_Data[RX_Count - 4] = RX_Temp;
+ 269   3                              RX_Count++;
+ 270   3                      }
+ 271   2                      else if (RX_Count == RXPACKAGE.DATA_Len - 2)
+ 272   2                      {
+ 273   3                              RXPACKAGE.CRC16 = RX_Temp;
+ 274   3                              RX_Count++;
+ 275   3                      }
+ 276   2                      else if (RX_Count == RXPACKAGE.DATA_Len - 1)
+ 277   2                      {
+ 278   3                              RXPACKAGE.CRC16 = RXPACKAGE.CRC16 | RX_Temp << 8;
+ 279   3                              RX_Count = 0;
+ 280   3                      }
+ 281   2                      else
+ 282   2                      {
+ 283   3                              RX_Count = 0;
+ 284   3                              RXPACKAGE.DATA_Len = 0;
+ 285   3                      }
+ 286   2                      Flag1 = 1;
+ 287   2              }
+ 288   1      }
+ 289          
+ 290          // 串口2中断接收数据
+ 291          #elif UART_ROUTINE_SELECT == 2
               void Uart1_Routine() interrupt 8
               {
-                      static uint8_t i=0;
-                      if(UART2_GET_RX_FLAG)
+                      static uint8_t i = 0;
+                      if (UART2_GET_RX_FLAG)
                       {
                               UART2_CLEAR_RX_FLAG;
                               DAT2 = S2BUF;
-                              if(DAT2 != '#')                         //'#'结束标志
+                              if (DAT2 != '#') //'#'结束标志
                               {
                                       RX2_BUFF[RX2_COUNT++] = DAT2++;
                               }
+C51 COMPILER V9.60.7.0   UART                                                              04/16/2023 00:34:27 PAGE 6   
+
                               else
                               {
-                                      for(i=0;i<RX2_COUNT;i++)
+                                      for (i = 0; i < RX2_COUNT; i++)
                                       {
                                               RX2_DAT[i] = RX2_BUFF[i];
                                       }
-                                      RX2_COUNT=0;
-                                      Flag2=1;
-C51 COMPILER V9.60.7.0   UART                                                              02/04/2023 17:30:13 PAGE 6   
-
+                                      RX2_COUNT = 0;
+                                      Flag2 = 1;
                               }
                       }
               }
@@ -327,9 +335,9 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    698    ----
+   CODE SIZE        =    631    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    405      33
+   XDATA SIZE       =     61      15
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

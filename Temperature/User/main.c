@@ -3,11 +3,13 @@
 void main()
 {
 	Deal_Init();
-	
-	while(1)
+
+	ES = 1;
+	EA = 1;
+
+	while (1)
 	{
 		Key_Scan();
-		Temp_Alarm();
+		Temp_Alarm(); 
 	}
 }
-

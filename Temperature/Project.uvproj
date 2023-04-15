@@ -374,22 +374,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>User</GroupName>
+          <GroupName>Library</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>UART.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\User\main.c</FilePath>
+              <FilePath>.\Library\UART.c</FilePath>
             </File>
             <File>
-              <FileName>Deal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\Deal.c</FilePath>
-            </File>
-            <File>
-              <FileName>Deal.h</FileName>
+              <FileName>UART.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\User\Deal.h</FilePath>
+              <FilePath>.\Library\UART.h</FilePath>
+            </File>
+            <File>
+              <FileName>STC12_DELAY.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Library\STC12_DELAY.c</FilePath>
+            </File>
+            <File>
+              <FileName>STC12_DELAY.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Library\STC12_DELAY.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -451,30 +456,35 @@
               <FileType>5</FileType>
               <FilePath>.\HardWare\KEY.h</FilePath>
             </File>
+            <File>
+              <FileName>CRC16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HardWare\CRC16.c</FilePath>
+            </File>
+            <File>
+              <FileName>CRC16.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\HardWare\CRC16.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Library</GroupName>
+          <GroupName>User</GroupName>
           <Files>
             <File>
-              <FileName>UART.c</FileName>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Library\UART.c</FilePath>
+              <FilePath>.\User\main.c</FilePath>
             </File>
             <File>
-              <FileName>UART.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Library\UART.h</FilePath>
-            </File>
-            <File>
-              <FileName>STC12_DELAY.c</FileName>
+              <FileName>Deal.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Library\STC12_DELAY.c</FilePath>
+              <FilePath>.\User\Deal.c</FilePath>
             </File>
             <File>
-              <FileName>STC12_DELAY.h</FileName>
+              <FileName>Deal.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\Library\STC12_DELAY.h</FilePath>
+              <FilePath>.\User\Deal.h</FilePath>
             </File>
           </Files>
         </Group>
